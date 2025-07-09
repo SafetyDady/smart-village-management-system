@@ -113,3 +113,14 @@ prometheus-client==0.19.0
 # Health checks
 psutil==5.9.6
 
+alembic>=1.16.0
+pydantic-settings>=2.10.0
+python-dotenv>=1.1.0
+psycopg2-binary>=2.9.0
+pytest>=8.4.0
+pytest-asyncio>=1.0.0
+httpx>=0.28.0
+python-jose[cryptography]>=3.5.0
+passlib[bcrypt]>=1.7.4
+email-validator>=2.2.0
+python-multipart>=0.0.20

@@ -4,7 +4,7 @@ LINE Service - Smart Village Management System
 
 import httpx
 import json
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, List
 from app.core.config import settings
 
 

@@ -1,205 +1,307 @@
 # Smart Village Management System (LIFF Edition)
 
-## 🏘️ ภาพรวมโปรเจกต์
+A comprehensive village management system built with FastAPI backend and LINE LIFF integration for modern community management.
 
-Smart Village Management System เป็นระบบจัดการหมู่บ้านอัจฉริยะที่ออกแบบมาเพื่อลดภาระงานของผู้ดูแล เพิ่มความสะดวกสบายให้ผู้อยู่อาศัย และสร้างความโปร่งใสทางการเงิน โดยใช้กลยุทธ์ **"Integration-First"** และ **LINE LIFF** แทนการพัฒนา Native Mobile App
+## 🏗️ Architecture
 
-## 🏗️ สถาปัตยกรรมระบบ
+This system follows a microservices architecture with the following components:
 
-### 4-Service Microservices Architecture
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    SMART VILLAGE ECOSYSTEM                  │
-├─────────────────────────────────────────────────────────────┤
-│  🌐 Landing Page     📊 Admin Dashboard    📱 LIFF PWA      │
-│  (Marketing)         (Management)          (Residents)      │
-│                                                             │
-│  ┌─────────────────────────────────────────────────────┐   │
-│  │              🔧 Backend API                         │   │
-│  │         (Core Business Logic)                       │   │
-│  └─────────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────────┘
-```
+- **Backend API**: FastAPI with PostgreSQL database
+- **Admin Dashboard**: React TypeScript application  
+- **LIFF PWA**: LINE Front-end Framework Progressive Web App
+- **Authentication**: JWT + LINE LIFF integration
 
-### Service Breakdown
-| Service | Technology | Deployment | Purpose |
-|---------|------------|------------|---------|
-| **🌐 Landing Page** | Next.js 14 + TypeScript | Vercel | Marketing & Lead Generation |
-| **📊 Admin Dashboard** | React + TypeScript + Vite | Vercel | Management Interface |
-| **📱 LIFF PWA** | React + TypeScript + PWA | Vercel | Resident Mobile Experience |
-| **🔧 Backend API** | FastAPI + Python 3.11 | Railway | Core Business Logic |
+## 🚀 Features
 
-## 🚀 ฟีเจอร์หลัก
+### Core Features
+- **User Management**: Multi-role user system (Super Admin, Village Admin, Accounting Admin, Resident)
+- **Village Management**: Complete village information and property management
+- **Property Management**: Unit tracking, ownership, and resident assignment
+- **Authentication**: Secure JWT-based auth with LINE LIFF integration
+- **Access Control**: Role-based permissions and security
 
-### 💰 ระบบจัดการการเงิน
-- การออกใบแจ้งหนี้อัตโนมัติ
-- AI OCR Payment Verification
-- Real-time Financial Dashboards
-- Banking API Integration
+### LINE Integration
+- LINE LIFF for mobile-first experience
+- LINE Login authentication
+- LINE Notify for notifications
+- Seamless mobile user experience
 
-### 🏠 ระบบจัดการทรัพย์สิน
-- ฐานข้อมูลทรัพย์สินครบถ้วน
-- การจัดการวงจรชีวิตผู้อยู่อาศัย
-- การติดตามคำขอซ่อมบำรุง
-- ระบบจัดการเอกสาร
+## 📋 Prerequisites
 
-### 🚪 ระบบควบคุมการเข้าออก (Enhanced)
-- **QR Code System**: 5 ประเภท QR Code พร้อม AES-256 encryption
-- **License Plate Recognition (LPR)**: ระบบกล้องอ่านทะเบียนรถตามมาตรฐาน ISAPI v2.0
-- **Visitor Management**: ระบบจัดการผู้มาเยือนแบบครบวงจร
-- **Smart Gate Integration**: การเชื่อมต่อกับประตูอัตโนมัติ
+Before you begin, ensure you have the following installed:
 
-### 📱 การเชื่อมต่อ LINE (Enhanced)
-- **LIFF PWA**: Progressive Web App ใน LINE
-- **Automated Notifications**: การแจ้งเตือนอัตโนมัติ
-- **AI Chatbot**: ระบบสนับสนุนลูกค้าด้วย AI
-- **LINE Pay Integration**: การชำระเงินผ่าน LINE Pay
-
-## 📁 โครงสร้างโปรเจกต์
-
-```
-smart-village-management-system/
-├── backend/                    # FastAPI Backend
-│   ├── app/
-│   │   ├── api/               # API routes
-│   │   ├── core/              # Core configurations
-│   │   ├── models/            # Database models
-│   │   ├── schemas/           # Pydantic schemas
-│   │   ├── services/          # Business logic
-│   │   └── utils/             # Utilities
-│   ├── alembic/               # Database migrations
-│   └── requirements.txt
-├── frontend-admin/            # React Admin Dashboard
-│   ├── src/
-│   │   ├── components/
-│   │   ├── pages/
-│   │   ├── hooks/
-│   │   └── services/
-│   └── package.json
-├── frontend-user/             # LIFF PWA
-│   ├── src/
-│   │   ├── components/
-│   │   ├── pages/
-│   │   ├── liff/
-│   │   └── services/
-│   └── package.json
-├── landing-page/              # Next.js Landing Page
-│   ├── src/
-│   │   ├── components/
-│   │   ├── pages/
-│   │   └── styles/
-│   └── package.json
-├── deployment/
-│   ├── docker-compose.yml
-│   └── railway.json
-└── docs/
-    ├── api/
-    ├── deployment/
-    └── development/
-```
-
-## 🛠️ Technology Stack
-
-### Backend
-- **Framework**: FastAPI + Python 3.11
-- **Database**: PostgreSQL 15 + Redis
-- **Authentication**: JWT + LINE LIFF
-- **ORM**: SQLAlchemy + Alembic
-- **Deployment**: Railway
-
-### Frontend
-- **Admin Dashboard**: React 18 + TypeScript + Vite
-- **LIFF PWA**: React 18 + TypeScript + PWA
-- **Landing Page**: Next.js 14 + TypeScript
-- **Styling**: Tailwind CSS
-- **Deployment**: Vercel
-
-### External Integrations
-- **LINE Platform**: LIFF, Messaging, Notify APIs
-- **Banking APIs**: Payment gateway integration
-- **AI OCR Service**: Receipt processing
-- **Smart Devices**: ISAPI v2.0 compatible cameras
-
-## 🚀 การเริ่มต้นพัฒนา
-
-### Prerequisites
-- Node.js 18+
 - Python 3.11+
-- PostgreSQL 15+
-- Git
+- Node.js 18+
+- PostgreSQL 13+
+- Redis 6+ (optional, for caching)
 
-### Backend Setup
+## 🛠️ Installation
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/SafetyDady/smart-village-management-system.git
+cd smart-village-management-system
+```
+
+### 2. Backend Setup
+
 ```bash
 cd backend
+
+# Create virtual environment
 python -m venv venv
-source venv/bin/activate  # Linux/Mac
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Install dependencies
 pip install -r requirements.txt
+
+# Copy environment file
+cp .env.example .env
+```
+
+### 3. Environment Configuration
+
+Edit the `.env` file with your configuration:
+
+```bash
+# Database
+DATABASE_URL=postgresql://postgres:password@localhost:5432/smart_village
+
+# Security
+SECRET_KEY=your_super_secret_key_here
+
+# LINE Platform
+LINE_CHANNEL_ID=your_line_channel_id
+LINE_CHANNEL_SECRET=your_line_channel_secret
+LIFF_ID=your_liff_app_id
+```
+
+### 4. Database Setup
+
+```bash
+# Create database
+createdb smart_village
+
+# Run migrations
 alembic upgrade head
-uvicorn app.main:app --reload
 ```
 
-### Frontend Admin Setup
+### 5. Run Development Server
+
 ```bash
-cd frontend-admin
-npm install
-npm run dev
+# Start backend server
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-### LIFF PWA Setup
+The API will be available at:
+- **API**: http://localhost:8000
+- **Documentation**: http://localhost:8000/docs
+- **OpenAPI Schema**: http://localhost:8000/openapi.json
+
+## 🧪 Testing
+
+### Run Tests
+
 ```bash
-cd frontend-user
-npm install
-npm run dev
+# Run all tests
+python -m pytest
+
+# Run with coverage
+python -m pytest --cov=app
+
+# Run specific test file
+python -m pytest tests/test_users.py -v
+
+# Run specific test
+python -m pytest tests/test_users.py::TestUserEndpoints::test_login_success -v
 ```
 
-### Landing Page Setup
+### Test Database
+
+Tests use SQLite in-memory database by default. No additional setup required.
+
+## 📊 Database Schema
+
+### Core Models
+
+- **Users**: User accounts with roles and LINE integration
+- **Villages**: Village information and settings
+- **Properties**: Property units within villages
+
+### Relationships
+
+- Users can belong to multiple villages (many-to-many)
+- Properties belong to one village (one-to-many)
+- Users can own/rent multiple properties (many-to-many)
+
+## 🔐 Authentication
+
+### JWT Authentication
+
 ```bash
-cd landing-page
-npm install
-npm run dev
+# Login
+POST /api/v1/auth/login
+{
+  "username": "user@example.com",
+  "password": "password"
+}
+
+# Response
+{
+  "access_token": "eyJ...",
+  "refresh_token": "eyJ...",
+  "token_type": "bearer"
+}
 ```
 
-## 📊 แผนการพัฒนา
+### LINE LIFF Authentication
 
-### Phase 1: Foundation & Authentication (เดือน 1-2)
-- ✅ Backend API Foundation
-- ✅ Database Schema & Migrations
-- ✅ JWT + LIFF Authentication
-- ✅ CI/CD Pipeline Setup
+```bash
+# LINE LIFF Login
+POST /api/v1/auth/line-login
+{
+  "id_token": "line_id_token",
+  "access_token": "line_access_token"
+}
+```
 
-### Phase 1.5: Landing Page & Marketing (เดือน 2.5)
-- 🔄 Next.js Landing Page Development
-- 🔄 SEO Optimization & Content
-- 🔄 Marketing Analytics Setup
-- 🔄 Lead Generation System
+## 📚 API Documentation
 
-### Phase 2: Village Accounting System (เดือน 3-4)
-- ⏳ Property & Resident Management
-- ⏳ Invoice Generation & Management
-- ⏳ Payment Recording & Verification
-- ⏳ Admin Dashboard Core Features
+### Core Endpoints
 
-## 💰 การลงทุนและผลตอบแทน
+#### Authentication
+- `POST /api/v1/auth/login` - User login
+- `POST /api/v1/auth/line-login` - LINE LIFF login
+- `POST /api/v1/auth/refresh` - Refresh token
+- `POST /api/v1/auth/logout` - Logout
+- `GET /api/v1/auth/me` - Get current user
 
-- **งบประมาณรวม**: ฿6,600,000
-- **ROI ปีแรก**: 1,145%
-- **รายได้ปีแรก**: ฿7,560,000
-- **Payback Period**: 1.2 เดือน
+#### Users
+- `GET /api/v1/users/` - List users
+- `POST /api/v1/users/` - Create user
+- `GET /api/v1/users/{id}` - Get user by ID
+- `PUT /api/v1/users/{id}` - Update user
+- `DELETE /api/v1/users/{id}` - Delete user
 
-## 🎯 Target Market
+#### Villages
+- `GET /api/v1/villages/` - List villages
+- `POST /api/v1/villages/` - Create village
+- `GET /api/v1/villages/{id}` - Get village by ID
+- `PUT /api/v1/villages/{id}` - Update village
 
-1. **Private Villages**: 100-1,000 units (฿3,000-5,000/month)
-2. **Condominiums**: 50-500 units (฿2,000-4,000/month)
-3. **Townhouse Communities**: 30-200 units (฿1,500-3,000/month)
+#### Properties
+- `GET /api/v1/properties/` - List properties
+- `POST /api/v1/properties/` - Create property
+- `GET /api/v1/properties/{id}` - Get property by ID
+- `PUT /api/v1/properties/{id}` - Update property
 
-## 📞 การติดต่อ
+### Interactive Documentation
 
-- **Project**: Smart Village Management System
-- **Version**: 1.0.0
-- **License**: Private
-- **Contact**: manus@smartvillage.app
+Visit http://localhost:8000/docs for interactive API documentation with Swagger UI.
+
+## 🔧 Development
+
+### Database Migrations
+
+```bash
+# Create new migration
+alembic revision --autogenerate -m "description"
+
+# Apply migrations
+alembic upgrade head
+
+# Rollback migration
+alembic downgrade -1
+```
+
+### Code Quality
+
+```bash
+# Format code
+black app/
+
+# Lint code
+flake8 app/
+
+# Type checking
+mypy app/
+```
+
+## 🚀 Deployment
+
+### Production Environment
+
+1. Set production environment variables
+2. Use production database (PostgreSQL)
+3. Configure reverse proxy (nginx)
+4. Use process manager (systemd, supervisor)
+
+### Docker Deployment
+
+```bash
+# Build image
+docker build -t smart-village-backend .
+
+# Run container
+docker run -p 8000:8000 smart-village-backend
+```
+
+## 📁 Project Structure
+
+```
+backend/
+├── app/
+│   ├── api/
+│   │   └── v1/
+│   │       ├── endpoints/     # API route handlers
+│   │       └── api.py         # API router
+│   ├── core/
+│   │   ├── config.py          # Configuration settings
+│   │   ├── database.py        # Database connection
+│   │   └── security.py        # Security utilities
+│   ├── models/                # SQLAlchemy models
+│   ├── schemas/               # Pydantic schemas
+│   ├── services/              # Business logic
+│   └── main.py                # FastAPI application
+├── alembic/                   # Database migrations
+├── tests/                     # Test files
+├── requirements.txt           # Python dependencies
+├── .env.example              # Environment template
+└── alembic.ini               # Alembic configuration
+```
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🆘 Support
+
+For support and questions:
+
+- Create an issue on GitHub
+- Contact the development team
+- Check the documentation at `/docs`
+
+## 🔄 Changelog
+
+### Version 1.0.0 (Current)
+- Initial release with core functionality
+- FastAPI backend with authentication
+- Database models and migrations
+- Basic API endpoints
+- Test suite setup
+- Documentation
 
 ---
 
-*Smart Village Management System - Making village management smarter, easier, and more transparent.*
+**Smart Village Management System** - Building better communities through technology.
 
