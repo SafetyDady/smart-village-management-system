@@ -28,6 +28,7 @@ Smart Village Management System เป็นระบบจัดการหม
 | **💾 Database** | PostgreSQL + SQLAlchemy | ✅ Active | Data Storage |
 | **📊 API Documentation** | Swagger UI | ✅ Active | API Testing & Documentation |
 | **🔐 Authentication** | JWT + Bcrypt | ✅ Active | User Authentication |
+| **💰 Accounting System** | SQLAlchemy Models | ✅ Active | Invoice, Payment, Receipt Management |
 | **📱 Frontend** | React/Next.js | 🔄 Planned | User Interface |
 
 ## 🚀 ฟีเจอร์ที่พร้อมใช้งาน
@@ -59,6 +60,15 @@ Smart Village Management System เป็นระบบจัดการหม
 - ✅ Session Management
 - ✅ API Security Headers
 
+### 💰 ระบบบัญชี (Phase 2)
+- ✅ การสร้างและจัดการใบแจ้งหนี้ (Invoice Management)
+- ✅ ระบบการชำระเงิน 5 วิธี (Cash, Bank Transfer, Credit Card, QR Code, LINE Pay)
+- ✅ การออกใบเสร็จอัตโนมัติ (Auto Receipt Generation)
+- ✅ ระบบ FIFO Payment Allocation (จัดสรรการชำระเงินแบบเข้าก่อนออกก่อน)
+- ✅ รองรับการชำระเงินบางส่วน (Partial Payment Support)
+- ✅ ติดตามสถานะการชำระเงินและใบแจ้งหนี้ค้างชำระ
+- ✅ ระบบ Audit Trail สำหรับการเงิน
+
 ## 📁 โครงสร้างโปรเจกต์
 
 ```
@@ -80,17 +90,27 @@ smart-village-management-system/
 │   │   ├── models/            # SQLAlchemy models
 │   │   │   ├── user.py
 │   │   │   ├── village.py
-│   │   │   └── property.py
+│   │   │   ├── property.py
+│   │   │   ├── invoice.py        # Phase 2: Accounting
+│   │   │   ├── payment.py        # Phase 2: Accounting
+│   │   │   ├── receipt.py        # Phase 2: Accounting
+│   │   │   └── payment_invoice.py # Phase 2: Accounting
 │   │   ├── schemas/           # Pydantic schemas
 │   │   │   ├── auth.py
 │   │   │   ├── user.py
 │   │   │   ├── village.py
-│   │   │   └── property.py
+│   │   │   ├── property.py
+│   │   │   ├── invoice.py        # Phase 2: Accounting
+│   │   │   ├── payment.py        # Phase 2: Accounting
+│   │   │   └── receipt.py        # Phase 2: Accounting
 │   │   ├── services/          # Business logic
 │   │   │   ├── auth_service.py
 │   │   │   ├── user_service.py
 │   │   │   ├── village_service.py
 │   │   │   ├── property_service.py
+│   │   │   ├── invoice_service.py    # Phase 2: Accounting
+│   │   │   ├── payment_service.py    # Phase 2: Accounting
+│   │   │   ├── receipt_service.py    # Phase 2: Accounting
 │   │   │   └── line_service.py
 │   │   └── main.py           # FastAPI application
 │   ├── alembic/               # Database migrations
@@ -152,9 +172,10 @@ uvicorn app.main:app --reload
 ```
 
 ### การเข้าถึงระบบ
-- **API Documentation**: http://localhost:8000/api/v1/docs
-- **Alternative Docs**: http://localhost:8000/redoc
-- **Health Check**: http://localhost:8000/health
+- **API Documentation**: http://127.0.0.1:8000/api/v1/docs
+- **Alternative Docs**: http://127.0.0.1:8000/redoc
+- **Health Check**: http://127.0.0.1:8000/health
+- **Root Endpoint**: http://127.0.0.1:8000/
 
 ### Default Super Admin
 ```
@@ -190,6 +211,16 @@ Password: admin123
 - `PUT /api/v1/properties/{property_id}` - แก้ไขข้อมูลทรัพย์สิน
 - `DELETE /api/v1/properties/{property_id}` - ลบทรัพย์สิน
 
+### Accounting Management (Phase 2)
+- `GET /api/v1/invoices/` - ดูรายการใบแจ้งหนี้
+- `POST /api/v1/invoices/` - สร้างใบแจ้งหนี้ใหม่
+- `GET /api/v1/invoices/{invoice_id}` - ดูข้อมูลใบแจ้งหนี้
+- `PUT /api/v1/invoices/{invoice_id}` - แก้ไขใบแจ้งหนี้
+- `POST /api/v1/payments/` - บันทึกการชำระเงิน
+- `GET /api/v1/payments/` - ดูรายการการชำระเงิน
+- `GET /api/v1/receipts/` - ดูรายการใบเสร็จ
+- `POST /api/v1/receipts/generate` - สร้างใบเสร็จอัตโนมัติ
+
 ## 📊 แผนการพัฒนา
 
 ### Phase 1: Foundation ✅ เสร็จแล้ว
@@ -201,12 +232,13 @@ Password: admin123
 - ✅ Property Management
 - ✅ API Documentation
 
-### Phase 2: Village Accounting 🔄 กำลังพัฒนา
-- ⏳ Transaction Management
-- ⏳ Payment Methods
-- ⏳ Invoice Generation
-- ⏳ Receipt Management
-- ⏳ Financial Reporting
+### Phase 2: Village Accounting ✅ เสร็จแล้ว
+- ✅ Invoice Management System
+- ✅ Payment Processing (5 วิธีการชำระ)
+- ✅ Receipt Generation (Auto-generated)
+- ✅ FIFO Payment Allocation
+- ✅ Partial Payment Support
+- ✅ Accounting Database Schema
 
 ### Phase 3: Enhanced Access Control 📋 วางแผน
 - 📋 Access Logs
@@ -307,7 +339,7 @@ curl -X POST "http://localhost:8000/api/v1/villages/" \
 ## 📞 การติดต่อ
 
 - **Project**: Smart Village Management System
-- **Version**: 1.0.0 (Phase 1 Complete)
+- **Version**: 2.0.0 (Phase 2 Complete - Village Accounting)
 - **Repository**: https://github.com/SafetyDady/smart-village-management-system
 - **License**: Private
 - **Status**: Active Development
