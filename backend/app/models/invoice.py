@@ -72,7 +72,7 @@ class Invoice(Base):
         return f"<Invoice(id={self.id}, property_id={self.property_id}, amount={self.amount}, status={self.status})>"
     
     @property
-    def overdue(self) -> bool:
+    def overdue_status(self) -> bool:
         """Check if invoice is overdue"""
         from datetime import datetime
         return self.due_date < datetime.now() and self.status == InvoiceStatus.PENDING
