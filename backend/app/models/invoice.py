@@ -3,7 +3,7 @@ Invoice Model - Smart Village Management System
 """
 
 import uuid
-from sqlalchemy import Column, String, Boolean, DateTime, Text, ForeignKey, Numeric, Enum
+from sqlalchemy import Column, String, Boolean, DateTime, Text, ForeignKey, Numeric, Enum, Integer
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
