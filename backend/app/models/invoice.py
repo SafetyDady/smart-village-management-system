@@ -61,7 +61,7 @@ class Invoice(Base):
     reference_number = Column(String(100), nullable=True, unique=True)
     
     # Relationships
-    property = relationship("Property", back_populates="invoices")
+    property_obj = relationship("Property", back_populates="invoices")
     created_by_user = relationship("User", foreign_keys=[created_by])
     updated_by_user = relationship("User", foreign_keys=[updated_by])
     

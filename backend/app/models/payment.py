@@ -50,7 +50,7 @@ class Payment(Base):
     archived = Column(Boolean, default=False, nullable=False)
     
     # Relationships
-    property = relationship("Property", back_populates="payments")
+    property_obj = relationship("Property", back_populates="payments")
     created_by_user = relationship("User", foreign_keys=[created_by])
     
     # Many-to-many relationship with invoices

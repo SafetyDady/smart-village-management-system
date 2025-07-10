@@ -83,8 +83,8 @@ class Property(Base):
     village = relationship("Village", back_populates="properties")
     
     # Accounting relationships
-    invoices = relationship("Invoice", back_populates="property")
-    payments = relationship("Payment", back_populates="property")
+    invoices = relationship("Invoice", back_populates="property_obj")
+    payments = relationship("Payment", back_populates="property_obj")
     
     # Commented out relationships to models that don't exist yet
     # residents = relationship("Resident", back_populates="property", cascade="all, delete-orphan")
