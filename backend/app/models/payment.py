@@ -76,7 +76,7 @@ class Payment(Base):
         return float(self.amount) - self.allocated_amount
     
     @property
-    def is_fully_allocated(self) -> bool:
+    def fully_allocated(self) -> bool:
         """Check if payment is fully allocated to invoices"""
         return self.unallocated_amount <= 0
 
