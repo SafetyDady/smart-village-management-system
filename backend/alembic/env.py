@@ -16,6 +16,12 @@ from app.models.user import User
 from app.models.village import Village
 from app.models.property import Property
 
+# Import accounting models
+from app.models.invoice import Invoice
+from app.models.payment import Payment
+from app.models.receipt import Receipt
+from app.models.payment_invoice import PaymentInvoice
+
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
