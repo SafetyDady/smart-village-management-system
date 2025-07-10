@@ -70,16 +70,16 @@ class User(Base):
     created_by = Column(Integer, ForeignKey("users.id"), nullable=True)
     updated_by = Column(Integer, ForeignKey("users.id"), nullable=True)
     
-    # Relationships
-    social_accounts = relationship("SocialAccount", back_populates="user", cascade="all, delete-orphan")
-    refresh_tokens = relationship("RefreshToken", back_populates="user", cascade="all, delete-orphan")
-    audit_logs = relationship("AuditLog", foreign_keys="AuditLog.user_id", back_populates="user")
+    # Relationships (commented out until models are created)
+    # social_accounts = relationship("SocialAccount", back_populates="user", cascade="all, delete-orphan")
+    # refresh_tokens = relationship("RefreshToken", back_populates="user", cascade="all, delete-orphan")
+    # audit_logs = relationship("AuditLog", foreign_keys="AuditLog.user_id", back_populates="user")
     
-    # Village relationships (for residents)
-    resident_properties = relationship("Resident", back_populates="user")
+    # Village relationships (for residents) - commented out until models are created
+    # resident_properties = relationship("Resident", back_populates="user")
     
-    # Admin relationships
-    admin_villages = relationship("Admin", back_populates="user")
+    # Admin relationships - commented out until models are created
+    # admin_villages = relationship("Admin", back_populates="user")
     
     def __repr__(self):
         return f"<User(id={self.id}, email='{self.email}', role='{self.role}')>"
@@ -127,16 +127,17 @@ class User(Base):
         if self.is_super_admin:
             return True
         
-        if self.is_village_admin or self.is_accounting_admin:
-            # Check if user is admin of this village
-            return any(admin.village_id == village_id for admin in self.admin_villages)
+        # Commented out until models are created
+        # if self.is_village_admin or self.is_accounting_admin:
+        #     # Check if user is admin of this village
+        #     return any(admin.village_id == village_id for admin in self.admin_villages)
         
-        if self.is_resident:
-            # Check if user is resident of this village
-            return any(
-                resident.property.village_id == village_id 
-                for resident in self.resident_properties
-            )
+        # if self.is_resident:
+        #     # Check if user is resident of this village
+        #     return any(
+        #         resident.property.village_id == village_id 
+        #         for resident in self.resident_properties
+        #     )
         
+        # For now, return False for non-super-admin users
         return False
-

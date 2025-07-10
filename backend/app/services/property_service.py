@@ -7,7 +7,7 @@ from datetime import datetime
 from sqlalchemy.orm import Session
 from sqlalchemy import and_, or_
 
-from app.models.village import Property
+from app.models.property import Property
 from app.schemas.property import PropertyCreate, PropertyUpdate
 
 

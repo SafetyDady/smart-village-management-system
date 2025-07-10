@@ -39,6 +39,20 @@ venv.bak/
 *.db
 *.sqlite3
 
+# Alembic
+alembic/versions/*.pyc
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Security
+*.pem
+*.key
+*.crt
+secrets/
+
 # Node.js
 node_modules/
 npm-debug.log*
@@ -155,4 +169,3 @@ temp/
 
 # Vercel
 .vercel
-
