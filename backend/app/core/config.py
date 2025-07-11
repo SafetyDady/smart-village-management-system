@@ -104,6 +104,19 @@ class Settings(BaseSettings):
     BACKUP_SCHEDULE: str = "0 2 * * *"  # Daily at 2 AM
     BACKUP_RETENTION_DAYS: int = 30
     
+    # Accounting Configuration
+    ACCOUNTING_ENABLED: bool = True
+    AUTO_JOURNAL_ENTRY: bool = True
+    AUTO_PERIOD_CREATION: bool = True
+    DEFAULT_CURRENCY: str = "THB"
+    FISCAL_YEAR_START: str = "01-01"  # MM-DD format
+    CHART_OF_ACCOUNTS_INITIALIZED: bool = False
+    
+    # Logging Configuration
+    LOG_LEVEL: str = "INFO"
+    LOG_FILE: Optional[str] = None
+    ENABLE_AUDIT_LOG: bool = True
+    
     class Config:
         env_file = ".env"
         case_sensitive = True

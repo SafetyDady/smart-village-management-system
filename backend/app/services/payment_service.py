@@ -6,12 +6,24 @@ from datetime import datetime
 from decimal import Decimal
 from sqlalchemy.orm import Session
 from sqlalchemy import and_, desc
+import logging
 
 from app.models.payment import Payment, PaymentMethod, PaymentStatus
 from app.models.invoice import Invoice, InvoiceStatus
 from app.models.payment_invoice import PaymentInvoice
 from app.models.property import Property
 from app.services.invoice_service import InvoiceService
+
+# Import accounting service for journal entry creation
+try:
+    from app.services.accounting_service import AccountingService
+except ImportError:
+    AccountingService = None
+
+# Import logging and audit trail
+from app.core.logging import accounting_logger, audit_logger
+
+logger = logging.getLogger(__name__)
 
 
 class PaymentService:
@@ -20,6 +32,8 @@ class PaymentService:
     def __init__(self, db: Session):
         self.db = db
         self.invoice_service = InvoiceService(db)
+        # Initialize accounting service if available
+        self.accounting_service = AccountingService(db) if AccountingService else None
     
     def create_payment(
         self,
@@ -324,4 +338,111 @@ class PaymentService:
             "total_amount_allocated": total_amount,
             "allocations_created": allocations_created
         }
+
+
+    def approve_payment(self, payment_id: str, approved_by_id: Optional[str] = None) -> Payment:
+        """
+        Approve a pending payment and create journal entry
+        
+        Args:
+            payment_id: Payment UUID
+            approved_by_id: User who approved the payment
+            
+        Returns:
+            Approved Payment object
+        """
+        payment = self.get_payment_by_id(payment_id)
+        if not payment:
+            raise ValueError(f"Payment {payment_id} not found")
+        
+        if payment.status != PaymentStatus.PENDING:
+            raise ValueError(f"Payment {payment_id} is not in pending status")
+        
+        # Update payment status
+        payment.status = PaymentStatus.CONFIRMED
+        if approved_by_id:
+            payment.approved_by_id = approved_by_id
+            payment.approved_at = datetime.now()
+        
+        self.db.commit()
+        self.db.refresh(payment)
+        
+        # Log payment approval
+        logger.info(f"Payment {payment_id} approved by user {approved_by_id}")
+        if approved_by_id:
+            audit_logger.log_payment_approval(
+                user_id=int(approved_by_id),
+                payment_id=payment_id,
+                amount=float(payment.amount)
+            )
+        
+        # Create journal entry for accounting
+        if self.accounting_service:
+            try:
+                journal_entry = self.accounting_service.create_journal_entry_for_payment(payment_id)
+                accounting_logger.log_payment_journal_entry(
+                    payment_id=payment_id,
+                    journal_entry_id=str(journal_entry.id),
+                    user_id=int(approved_by_id) if approved_by_id else 0
+                )
+                logger.info(f"Journal entry {journal_entry.id} created for payment {payment_id}")
+            except Exception as e:
+                logger.error(f"Failed to create journal entry for payment {payment_id}: {e}")
+                accounting_logger.log_error(
+                    message=f"Failed to create journal entry for payment {payment_id}",
+                    error=e,
+                    payment_id=payment_id,
+                    user_id=int(approved_by_id) if approved_by_id else 0
+                )
+                # Don't rollback payment approval, just log the error
+        
+        # Auto-allocate to invoices using FIFO
+        try:
+            self.allocate_payment_fifo(payment_id)
+            logger.info(f"Payment {payment_id} auto-allocated using FIFO")
+        except Exception as e:
+            logger.error(f"Failed to auto-allocate payment {payment_id}: {e}")
+        
+        return payment
+    
+    def reject_payment(self, payment_id: str, rejected_by_id: Optional[str] = None, reason: Optional[str] = None) -> Payment:
+        """
+        Reject a pending payment
+        
+        Args:
+            payment_id: Payment UUID
+            rejected_by_id: User who rejected the payment
+            reason: Rejection reason
+            
+        Returns:
+            Rejected Payment object
+        """
+        payment = self.get_payment_by_id(payment_id)
+        if not payment:
+            raise ValueError(f"Payment {payment_id} not found")
+        
+        if payment.status != PaymentStatus.PENDING:
+            raise ValueError(f"Payment {payment_id} is not in pending status")
+        
+        # Update payment status
+        payment.status = PaymentStatus.CANCELLED
+        if rejected_by_id:
+            payment.rejected_by_id = rejected_by_id
+            payment.rejected_at = datetime.now()
+        if reason:
+            payment.rejection_reason = reason
+        
+        self.db.commit()
+        self.db.refresh(payment)
+        
+        # Log payment rejection
+        logger.info(f"Payment {payment_id} rejected by user {rejected_by_id}")
+        if rejected_by_id:
+            audit_logger.log_payment_rejection(
+                user_id=int(rejected_by_id),
+                payment_id=payment_id,
+                reason=reason
+            )
+        
+        return payment
 

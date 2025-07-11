@@ -20,6 +20,15 @@ class PaymentMethod(PyEnum):
     MOBILE_BANKING = "mobile_banking"
 
 
+class PaymentStatus(PyEnum):
+    """Payment status enumeration"""
+    PENDING = "pending"
+    CONFIRMED = "confirmed"
+    PARTIALLY_ALLOCATED = "partially_allocated"
+    FULLY_ALLOCATED = "fully_allocated"
+    CANCELLED = "cancelled"
+
+
 class Payment(Base):
     """Payment model for tracking payments"""
     
@@ -35,6 +44,7 @@ class Payment(Base):
     amount = Column(Numeric(12, 2), nullable=False)
     payment_date = Column(DateTime, nullable=False)
     method = Column(Enum(PaymentMethod), nullable=False)
+    status = Column(Enum(PaymentStatus), nullable=False, default=PaymentStatus.PENDING)
     note = Column(Text, nullable=True)
     
     # Reference information
@@ -46,12 +56,21 @@ class Payment(Base):
     created_at = Column(DateTime, default=func.now(), nullable=False)
     updated_at = Column(DateTime, default=func.now(), onupdate=func.now(), nullable=False)
     
+    # Approval fields
+    approved_by_id = Column(Integer, ForeignKey("users.id"), nullable=True)
+    approved_at = Column(DateTime, nullable=True)
+    rejected_by_id = Column(Integer, ForeignKey("users.id"), nullable=True)
+    rejected_at = Column(DateTime, nullable=True)
+    rejection_reason = Column(Text, nullable=True)
+    
     # Soft delete
     archived = Column(Boolean, default=False, nullable=False)
     
     # Relationships
     property_obj = relationship("Property", back_populates="payments")
     created_by_user = relationship("User", foreign_keys=[created_by])
+    approved_by_user = relationship("User", foreign_keys=[approved_by_id])
+    rejected_by_user = relationship("User", foreign_keys=[rejected_by_id])
     
     # Many-to-many relationship with invoices
     payment_invoices = relationship("PaymentInvoice", back_populates="payment")
