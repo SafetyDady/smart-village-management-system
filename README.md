@@ -4,11 +4,12 @@ A comprehensive village management system built with FastAPI backend and LINE LI
 
 ## 🏗️ Architecture
 
-This system follows a microservices architecture with the following components:
+This system follows a 4-service microservices architecture with the following components:
 
 - **Backend API**: FastAPI with PostgreSQL database
-- **Admin Dashboard**: React TypeScript application  
-- **LIFF PWA**: LINE Front-end Framework Progressive Web App
+- **Landing Page**: Next.js marketing website (`frontend-landing/`)
+- **Admin Dashboard**: React TypeScript application (planned)
+- **LIFF PWA**: React Progressive Web App for residents (`frontend-user/`)
 - **Authentication**: JWT + LINE LIFF integration
 
 ## 🚀 Features
@@ -250,25 +251,42 @@ docker run -p 8000:8000 smart-village-backend
 ## 📁 Project Structure
 
 ```
-backend/
-├── app/
-│   ├── api/
-│   │   └── v1/
-│   │       ├── endpoints/     # API route handlers
-│   │       └── api.py         # API router
-│   ├── core/
-│   │   ├── config.py          # Configuration settings
-│   │   ├── database.py        # Database connection
-│   │   └── security.py        # Security utilities
-│   ├── models/                # SQLAlchemy models
-│   ├── schemas/               # Pydantic schemas
-│   ├── services/              # Business logic
-│   └── main.py                # FastAPI application
-├── alembic/                   # Database migrations
-├── tests/                     # Test files
-├── requirements.txt           # Python dependencies
-├── .env.example              # Environment template
-└── alembic.ini               # Alembic configuration
+smart-village-management-system/
+├── backend/                   # FastAPI Backend
+│   ├── app/
+│   │   ├── api/
+│   │   │   └── v1/
+│   │   │       ├── endpoints/     # API route handlers
+│   │   │       └── api.py         # API router
+│   │   ├── core/
+│   │   │   ├── config.py          # Configuration settings
+│   │   │   ├── database.py        # Database connection
+│   │   │   └── security.py        # Security utilities
+│   │   ├── models/                # SQLAlchemy models
+│   │   ├── schemas/               # Pydantic schemas
+│   │   ├── services/              # Business logic
+│   │   └── main.py                # FastAPI application
+│   ├── alembic/                   # Database migrations
+│   ├── tests/                     # Test files
+│   ├── requirements.txt           # Python dependencies
+│   ├── .env.example              # Environment template
+│   └── alembic.ini               # Alembic configuration
+├── frontend-landing/          # Next.js Landing Page
+│   ├── src/
+│   │   ├── app/                   # Next.js 14 App Router
+│   │   └── components/            # React components
+│   ├── public/                    # Static assets
+│   ├── package.json              # Dependencies
+│   └── next.config.js            # Next.js configuration
+├── frontend-user/             # React LIFF PWA
+│   ├── src/
+│   │   ├── components/            # React components
+│   │   └── App.jsx               # Main application
+│   ├── public/                    # Static assets
+│   ├── package.json              # Dependencies
+│   └── vite.config.js            # Vite configuration
+└── docs/                      # Documentation
+    └── progress-log.md           # Development progress
 ```
 
 ## 🤝 Contributing
