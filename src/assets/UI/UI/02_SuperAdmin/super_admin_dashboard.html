@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super Admin Dashboard - Smart Village Management System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Prompt', sans-serif;
+            background: #F8F9FA;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: #1A2B48;
+            color: white;
+            height: 70px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .menu-toggle {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 8px;
+            transition: background 0.3s ease;
+        }
+
+        .menu-toggle:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            background: #28A745;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .logo-text {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .user-info:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #28A745;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .user-details {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .user-name {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .user-role {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: white;
+            width: 280px;
+            height: calc(100vh - 70px);
+            position: fixed;
+            top: 70px;
+            left: 0;
+            z-index: 999;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            overflow-y: auto;
+        }
+
+        .sidebar.collapsed {
+            transform: translateX(-280px);
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid #E5E7EB;
+        }
+
+        .sidebar-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1A2B48;
+            margin-bottom: 5px;
+        }
+
+        .sidebar-subtitle {
+            font-size: 12px;
+            color: #6B7280;
+        }
+
+        .sidebar-menu {
+            padding: 20px 0;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px 20px;
+            color: #4B5563;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+            cursor: pointer;
+        }
+
+        .menu-item:hover {
+            background: #F3F4F6;
+            color: #1A2B48;
+            border-left-color: #1A2B48;
+        }
+
+        .menu-item.active {
+            background: #EBF4FF;
+            color: #1A2B48;
+            border-left-color: #1A2B48;
+            font-weight: 500;
+        }
+
+        .menu-icon {
+            width: 20px;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        .menu-text {
+            font-size: 14px;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            margin-top: 70px;
+            padding: 30px;
+            min-height: calc(100vh - 70px);
+            transition: margin-left 0.3s ease;
+        }
+
+        .main-content.expanded {
+            margin-left: 0;
+        }
+
+        .page-header {
+            margin-bottom: 30px;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1A2B48;
+            margin-bottom: 8px;
+        }
+
+        .page-subtitle {
+            font-size: 16px;
+            color: #6B7280;
+        }
+
+        /* Dashboard Cards */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .dashboard-card {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1A2B48;
+        }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+        }
+
+        .card-icon.blue { background: linear-gradient(135deg, #3B82F6, #1D4ED8); }
+        .card-icon.green { background: linear-gradient(135deg, #10B981, #059669); }
+        .card-icon.purple { background: linear-gradient(135deg, #8B5CF6, #7C3AED); }
+        .card-icon.orange { background: linear-gradient(135deg, #F59E0B, #D97706); }
+
+        .card-content {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #6B7280;
+        }
+
+        .stat-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1A2B48;
+        }
+
+        .stat-badge {
+            background: #EBF4FF;
+            color: #1A2B48;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .stat-badge.success {
+            background: #ECFDF5;
+            color: #059669;
+        }
+
+        .stat-badge.warning {
+            background: #FFFBEB;
+            color: #D97706;
+        }
+
+        .stat-badge.danger {
+            background: #FEF2F2;
+            color: #DC2626;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
+        }
+
+        .quick-actions-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1A2B48;
+            margin-bottom: 20px;
+        }
+
+        .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .action-button {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px 20px;
+            background: #F8F9FA;
+            border: 2px solid #E5E7EB;
+            border-radius: 12px;
+            text-decoration: none;
+            color: #4B5563;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .action-button:hover {
+            background: #1A2B48;
+            color: white;
+            border-color: #1A2B48;
+            transform: translateY(-2px);
+        }
+
+        .action-icon {
+            font-size: 18px;
+        }
+
+        .action-text {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        /* Recent Activity */
+        .recent-activity {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .activity-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1A2B48;
+            margin-bottom: 20px;
+        }
+
+        .activity-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: #F8F9FA;
+            border-radius: 12px;
+            transition: background 0.3s ease;
+        }
+
+        .activity-item:hover {
+            background: #F3F4F6;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: white;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-text {
+            font-size: 14px;
+            color: #1A2B48;
+            margin-bottom: 4px;
+        }
+
+        .activity-time {
+            font-size: 12px;
+            color: #6B7280;
+        }
+
+        /* Content Pages */
+        .content-page {
+            display: none;
+        }
+
+        .content-page.active {
+            display: block;
+        }
+
+        .content-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .content-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1A2B48;
+        }
+
+        .content-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: #1A2B48;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2E4A6B;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #F3F4F6;
+            color: #4B5563;
+            border: 1px solid #E5E7EB;
+        }
+
+        .btn-secondary:hover {
+            background: #E5E7EB;
+        }
+
+        /* Tables */
+        .data-table {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .table-header {
+            background: #F8F9FA;
+            padding: 20px;
+            border-bottom: 1px solid #E5E7EB;
+        }
+
+        .table-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1A2B48;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 15px 20px;
+            text-align: left;
+            border-bottom: 1px solid #E5E7EB;
+        }
+
+        th {
+            background: #F8F9FA;
+            font-weight: 600;
+            color: #1A2B48;
+            font-size: 14px;
+        }
+
+        td {
+            font-size: 14px;
+            color: #4B5563;
+        }
+
+        tr:hover {
+            background: #F8F9FA;
+        }
+
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-active {
+            background: #ECFDF5;
+            color: #059669;
+        }
+
+        .status-inactive {
+            background: #FEF2F2;
+            color: #DC2626;
+        }
+
+        .status-pending {
+            background: #FFFBEB;
+            color: #D97706;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-280px);
+            }
+
+            .sidebar.mobile-open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .actions-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header-right .user-details {
+                display: none;
+            }
+        }
+
+        /* Loading States */
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            color: #6B7280;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #1A2B48;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-left">
+            <button class="menu-toggle" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-home"></i>
+                </div>
+                <div class="logo-text">Smart Village</div>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="user-info">
+                <div class="user-avatar">SA</div>
+                <div class="user-details">
+                    <div class="user-name">Super Admin</div>
+                    <div class="user-role">ผู้ดูแลระบบหลัก</div>
+                </div>
+                <i class="fas fa-chevron-down" style="font-size: 12px; opacity: 0.7;"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-title">Super Admin Panel</div>
+            <div class="sidebar-subtitle">ระบบจัดการหลัก</div>
+        </div>
+        <div class="sidebar-menu">
+            <a href="#" class="menu-item active" onclick="showPage('dashboard')">
+                <i class="fas fa-tachometer-alt menu-icon"></i>
+                <span class="menu-text">Dashboard</span>
+            </a>
+            <a href="#" class="menu-item" onclick="showPage('user-management')">
+                <i class="fas fa-users menu-icon"></i>
+                <span class="menu-text">User Management</span>
+            </a>
+            <a href="#" class="menu-item" onclick="showPage('village-management')">
+                <i class="fas fa-building menu-icon"></i>
+                <span class="menu-text">Village Management</span>
+            </a>
+            <a href="#" class="menu-item" onclick="showPage('village-admin-dashboard')">
+                <i class="fas fa-user-tie menu-icon"></i>
+                <span class="menu-text">VillageAdmin Dashboard</span>
+            </a>
+            <a href="#" class="menu-item" onclick="showPage('village-accounting-dashboard')">
+                <i class="fas fa-calculator menu-icon"></i>
+                <span class="menu-text">VillageAccounting Dashboard</span>
+            </a>
+            <a href="#" class="menu-item" onclick="showPage('monitoring-analytics')">
+                <i class="fas fa-chart-line menu-icon"></i>
+                <span class="menu-text">Monitoring & Analytics</span>
+            </a>
+            <a href="#" class="menu-item" onclick="showPage('system-configuration')">
+                <i class="fas fa-cogs menu-icon"></i>
+                <span class="menu-text">System Configuration</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content" id="mainContent">
+        <!-- Dashboard Page -->
+        <div class="content-page active" id="dashboard">
+            <div class="page-header">
+                <h1 class="page-title">Dashboard</h1>
+                <p class="page-subtitle">ภาพรวมระบบ Smart Village Management System</p>
+            </div>
+
+            <!-- Dashboard Cards -->
+            <div class="dashboard-grid">
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3 class="card-title">ผู้ใช้งานทั้งหมด</h3>
+                        <div class="card-icon blue">
+                            <i class="fas fa-users"></i>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class="stat-item">
+                            <span class="stat-label">Village Admin</span>
+                            <span class="stat-value">32 คน</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Village Accounting</span>
+                            <span class="stat-value">15 คน</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">รวมทั้งหมด</span>
+                            <span class="stat-badge success">47 คน</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3 class="card-title">หมู่บ้านในระบบ</h3>
+                        <div class="card-icon green">
+                            <i class="fas fa-building"></i>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class="stat-item">
+                            <span class="stat-label">หมู่บ้านที่ใช้งาน</span>
+                            <span class="stat-value">24 แห่ง</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">ทรัพย์สินทั้งหมด</span>
+                            <span class="stat-value">2,847 หน่วย</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">อัตราการใช้งาน</span>
+                            <span class="stat-badge success">96.2%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3 class="card-title">ระบบการเงิน</h3>
+                        <div class="card-icon purple">
+                            <i class="fas fa-chart-pie"></i>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class="stat-item">
+                            <span class="stat-label">รายได้เดือนนี้</span>
+                            <span class="stat-value">฿2.4M</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">ค้างชำระ</span>
+                            <span class="stat-value">฿180K</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">อัตราการชำระ</span>
+                            <span class="stat-badge success">92.5%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3 class="card-title">ระบบรักษาความปลอดภัย</h3>
+                        <div class="card-icon orange">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class="stat-item">
+                            <span class="stat-label">การเข้า-ออกวันนี้</span>
+                            <span class="stat-value">1,247 ครั้ง</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">แขกผู้มาเยือน</span>
+                            <span class="stat-value">89 คน</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">สถานะระบบ</span>
+                            <span class="stat-badge success">ปกติ</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <h3 class="quick-actions-title">การดำเนินการด่วน</h3>
+                <div class="actions-grid">
+                    <a href="#" class="action-button" onclick="showPage('user-management')">
+                        <i class="fas fa-user-plus action-icon"></i>
+                        <span class="action-text">เพิ่มผู้ใช้งานใหม่</span>
+                    </a>
+                    <a href="#" class="action-button" onclick="showPage('village-management')">
+                        <i class="fas fa-plus-circle action-icon"></i>
+                        <span class="action-text">เพิ่มหมู่บ้านใหม่</span>
+                    </a>
+                    <a href="#" class="action-button" onclick="showPage('monitoring-analytics')">
+                        <i class="fas fa-chart-bar action-icon"></i>
+                        <span class="action-text">ดูรายงานระบบ</span>
+                    </a>
+                    <a href="#" class="action-button" onclick="showPage('system-configuration')">
+                        <i class="fas fa-cog action-icon"></i>
+                        <span class="action-text">ตั้งค่าระบบ</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="recent-activity">
+                <h3 class="activity-title">กิจกรรมล่าสุด</h3>
+                <div class="activity-list">
+                    <div class="activity-item">
+                        <div class="activity-icon blue">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-text">เพิ่มผู้ใช้งาน Village Admin ใหม่ที่หมู่บ้าน "บ้านสวนลิลลี่"</div>
+                            <div class="activity-time">5 นาทีที่แล้ว</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon green">
+                            <i class="fas fa-building"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-text">อัปเดตข้อมูลหมู่บ้าน "เดอะ พาร์ค วิลเลจ" เรียบร้อยแล้ว</div>
+                            <div class="activity-time">15 นาทีที่แล้ว</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon purple">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-text">สร้างรายงานการเงินประจำเดือนเสร็จสิ้น</div>
+                            <div class="activity-time">1 ชั่วโมงที่แล้ว</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon orange">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-text">ระบบรักษาความปลอดภัยทำการอัปเดตอัตโนมัติ</div>
+                            <div class="activity-time">2 ชั่วโมงที่แล้ว</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Management Page -->
+        <div class="content-page" id="user-management">
+            <div class="content-header">
+                <h1 class="content-title">User Management</h1>
+                <div class="content-actions">
+                    <button class="btn btn-primary">
+                        <i class="fas fa-user-plus"></i>
+                        เพิ่มผู้ใช้งานใหม่
+                    </button>
+                </div>
+            </div>
+
+            <div class="data-table">
+                <div class="table-header">
+                    <h3 class="table-title">รายการผู้ใช้งานในระบบ</h3>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ชื่อ-นามสกุล</th>
+                            <th>อีเมล</th>
+                            <th>บทบาท</th>
+                            <th>หมู่บ้าน</th>
+                            <th>สถานะ</th>
+                            <th>วันที่เข้าร่วม</th>
+                            <th>การดำเนินการ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>นายสมชาย วิลเลจ</td>
+                            <td>somchai@smartvillage.com</td>
+                            <td>Village Admin</td>
+                            <td>บ้านสวนลิลลี่</td>
+                            <td><span class="status-badge status-active">ใช้งาน</span></td>
+                            <td>15 มี.ค. 2024</td>
+                            <td>
+                                <button class="btn btn-secondary" style="padding: 5px 10px; font-size: 12px;">แก้ไข</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>นางสุดา บัญชี</td>
+                            <td>suda@smartvillage.com</td>
+                            <td>Village Accounting</td>
+                            <td>เดอะ พาร์ค วิลเลจ</td>
+                            <td><span class="status-badge status-active">ใช้งาน</span></td>
+                            <td>20 มี.ค. 2024</td>
+                            <td>
+                                <button class="btn btn-secondary" style="padding: 5px 10px; font-size: 12px;">แก้ไข</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>นายประยุทธ์ ผู้จัดการ</td>
+                            <td>prayuth@smartvillage.com</td>
+                            <td>Village Admin</td>
+                            <td>สมาร์ท วิลเลจ</td>
+                            <td><span class="status-badge status-pending">รอการอนุมัติ</span></td>
+                            <td>25 มี.ค. 2024</td>
+                            <td>
+                                <button class="btn btn-secondary" style="padding: 5px 10px; font-size: 12px;">อนุมัติ</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Village Management Page -->
+        <div class="content-page" id="village-management">
+            <div class="content-header">
+                <h1 class="content-title">Village Management</h1>
+                <div class="content-actions">
+                    <button class="btn btn-primary">
+                        <i class="fas fa-plus-circle"></i>
+                        เพิ่มหมู่บ้านใหม่
+                    </button>
+                </div>
+            </div>
+
+            <div class="data-table">
+                <div class="table-header">
+                    <h3 class="table-title">รายการหมู่บ้านในระบบ</h3>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ชื่อหมู่บ้าน</th>
+                            <th>ที่อยู่</th>
+                            <th>จำนวนทรัพย์สิน</th>
+                            <th>ผู้จัดการ</th>
+                            <th>สถานะ</th>
+                            <th>การดำเนินการ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>บ้านสวนลิลลี่</td>
+                            <td>เชียงใหม่</td>
+                            <td>150 หน่วย</td>
+                            <td>นายสมชาย วิลเลจ</td>
+                            <td><span class="status-badge status-active">ใช้งาน</span></td>
+                            <td>
+                                <button class="btn btn-secondary" style="padding: 5px 10px; font-size: 12px;">ดูรายละเอียด</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>เดอะ พาร์ค วิลเลจ</td>
+                            <td>กรุงเทพฯ</td>
+                            <td>200 หน่วย</td>
+                            <td>นางสุดา บัญชี</td>
+                            <td><span class="status-badge status-active">ใช้งาน</span></td>
+                            <td>
+                                <button class="btn btn-secondary" style="padding: 5px 10px; font-size: 12px;">ดูรายละเอียด</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>สมาร์ท วิลเลจ</td>
+                            <td>ภูเก็ต</td>
+                            <td>120 หน่วย</td>
+                            <td>นายประยุทธ์ ผู้จัดการ</td>
+                            <td><span class="status-badge status-pending">รอการตั้งค่า</span></td>
+                            <td>
+                                <button class="btn btn-secondary" style="padding: 5px 10px; font-size: 12px;">ตั้งค่า</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Village Admin Dashboard Page -->
+        <div class="content-page" id="village-admin-dashboard">
+            <div class="content-header">
+                <h1 class="content-title">VillageAdmin Dashboard</h1>
+            </div>
+            <div class="loading">
+                <div class="spinner"></div>
+                กำลังโหลด Village Admin Dashboard...
+            </div>
+        </div>
+
+        <!-- Village Accounting Dashboard Page -->
+        <div class="content-page" id="village-accounting-dashboard">
+            <div class="content-header">
+                <h1 class="content-title">VillageAccounting Dashboard</h1>
+            </div>
+            <div class="loading">
+                <div class="spinner"></div>
+                กำลังโหลด Village Accounting Dashboard...
+            </div>
+        </div>
+
+        <!-- Monitoring & Analytics Page -->
+        <div class="content-page" id="monitoring-analytics">
+            <div class="content-header">
+                <h1 class="content-title">Monitoring & Analytics</h1>
+            </div>
+            <div class="loading">
+                <div class="spinner"></div>
+                กำลังโหลดข้อมูลการตรวจสอบและรายงาน...
+            </div>
+        </div>
+
+        <!-- System Configuration Page -->
+        <div class="content-page" id="system-configuration">
+            <div class="content-header">
+                <h1 class="content-title">System Configuration</h1>
+            </div>
+            <div class="loading">
+                <div class="spinner"></div>
+                กำลังโหลดการตั้งค่าระบบ...
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sidebar Toggle
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('mainContent');
+            
+            sidebar.classList.toggle('collapsed');
+            mainContent.classList.toggle('expanded');
+        }
+
+        // Page Navigation
+        function showPage(pageId) {
+            // Hide all pages
+            const pages = document.querySelectorAll('.content-page');
+            pages.forEach(page => page.classList.remove('active'));
+            
+            // Show selected page
+            document.getElementById(pageId).classList.add('active');
+            
+            // Update menu active state
+            const menuItems = document.querySelectorAll('.menu-item');
+            menuItems.forEach(item => item.classList.remove('active'));
+            
+            // Find and activate the clicked menu item
+            const clickedItem = event.target.closest('.menu-item');
+            if (clickedItem) {
+                clickedItem.classList.add('active');
+            }
+        }
+
+        // Mobile Responsive
+        function handleResize() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('mainContent');
+            
+            if (window.innerWidth <= 768) {
+                sidebar.classList.add('collapsed');
+                mainContent.classList.add('expanded');
+            } else {
+                sidebar.classList.remove('collapsed');
+                mainContent.classList.remove('expanded');
+            }
+        }
+
+        // Initialize
+        window.addEventListener('resize', handleResize);
+        handleResize(); // Call on load
+
+        // Simulate data loading
+        setTimeout(() => {
+            console.log('Super Admin Dashboard loaded successfully');
+        }, 1000);
+    </script>
+</body>
+</html>
+

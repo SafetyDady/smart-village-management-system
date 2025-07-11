@@ -1,0 +1,1352 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Village Management - Smart Village Management System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Prompt', sans-serif;
+            background: #F8F9FA;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: #1A2B48;
+            color: white;
+            height: 70px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            background: #28A745;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .logo-text {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #28A745;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 70px;
+            padding: 30px;
+            min-height: calc(100vh - 70px);
+        }
+
+        .page-header {
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1A2B48;
+        }
+
+        .page-subtitle {
+            font-size: 16px;
+            color: #6B7280;
+            margin-top: 5px;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: #1A2B48;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2E4A6B;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #F3F4F6;
+            color: #4B5563;
+            border: 1px solid #E5E7EB;
+        }
+
+        .btn-secondary:hover {
+            background: #E5E7EB;
+        }
+
+        .btn-success {
+            background: #28A745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .btn-danger {
+            background: #DC3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #C82333;
+        }
+
+        .btn-warning {
+            background: #FFC107;
+            color: #212529;
+        }
+
+        .btn-warning:hover {
+            background: #E0A800;
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        /* Search and Filter */
+        .search-filter-section {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .search-filter-grid {
+            display: grid;
+            grid-template-columns: 1fr auto auto;
+            gap: 15px;
+            align-items: end;
+        }
+
+        .search-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .search-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .search-input {
+            padding: 10px 15px;
+            border: 2px solid #E5E7EB;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #1A2B48;
+        }
+
+        .filter-select {
+            padding: 10px 15px;
+            border: 2px solid #E5E7EB;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            cursor: pointer;
+        }
+
+        /* Data Table */
+        .data-table {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            margin-bottom: 25px;
+        }
+
+        .table-header {
+            background: #F8F9FA;
+            padding: 20px;
+            border-bottom: 1px solid #E5E7EB;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1A2B48;
+        }
+
+        .table-stats {
+            font-size: 14px;
+            color: #6B7280;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 15px 20px;
+            text-align: left;
+            border-bottom: 1px solid #E5E7EB;
+        }
+
+        th {
+            background: #F8F9FA;
+            font-weight: 600;
+            color: #1A2B48;
+            font-size: 14px;
+        }
+
+        td {
+            font-size: 14px;
+            color: #4B5563;
+        }
+
+        tr:hover {
+            background: #F8F9FA;
+        }
+
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-active {
+            background: #ECFDF5;
+            color: #059669;
+        }
+
+        .status-inactive {
+            background: #FEF2F2;
+            color: #DC2626;
+        }
+
+        .status-pending {
+            background: #FFFBEB;
+            color: #D97706;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow: hidden;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            padding: 25px 30px 20px;
+            border-bottom: 1px solid #E5E7EB;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1A2B48;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #6B7280;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: #F3F4F6;
+            color: #374151;
+        }
+
+        .modal-content {
+            padding: 25px 30px;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+
+        .modal-buttons {
+            padding: 20px 30px;
+            border-top: 1px solid #E5E7EB;
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+        }
+
+        /* Form */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .form-label.required::after {
+            content: " *";
+            color: #DC2626;
+        }
+
+        .form-input, .form-textarea, .form-select {
+            padding: 12px 15px;
+            border: 2px solid #E5E7EB;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+            font-family: 'Prompt', sans-serif;
+        }
+
+        .form-input:focus, .form-textarea:focus, .form-select:focus {
+            outline: none;
+            border-color: #1A2B48;
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-error {
+            color: #DC2626;
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+        /* Village Card */
+        .village-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .village-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .village-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+        }
+
+        .village-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1A2B48;
+            margin-bottom: 5px;
+        }
+
+        .village-location {
+            font-size: 14px;
+            color: #6B7280;
+        }
+
+        .village-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 10px;
+            background: #F8F9FA;
+            border-radius: 8px;
+        }
+
+        .stat-value {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1A2B48;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #6B7280;
+            margin-top: 2px;
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        .pagination-btn {
+            padding: 8px 12px;
+            border: 1px solid #E5E7EB;
+            background: white;
+            color: #4B5563;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .pagination-btn:hover {
+            background: #F3F4F6;
+        }
+
+        .pagination-btn.active {
+            background: #1A2B48;
+            color: white;
+            border-color: #1A2B48;
+        }
+
+        .pagination-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .search-filter-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal {
+                margin: 10px;
+                max-width: calc(100% - 20px);
+            }
+
+            .table-responsive {
+                overflow-x: auto;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+
+        /* Loading */
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            color: #6B7280;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #1A2B48;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6B7280;
+        }
+
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .empty-title {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+        .empty-description {
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-left">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-home"></i>
+                </div>
+                <div class="logo-text">Smart Village</div>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="user-info">
+                <div class="user-avatar">SA</div>
+                <div class="user-details">
+                    <div class="user-name">Super Admin</div>
+                    <div class="user-role">ผู้ดูแลระบบหลัก</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Village Management</h1>
+                <p class="page-subtitle">จัดการข้อมูลหมู่บ้านในระบบ Smart Village Management System</p>
+            </div>
+            <button class="btn btn-primary" onclick="openAddVillageModal()">
+                <i class="fas fa-plus-circle"></i>
+                เพิ่มหมู่บ้านใหม่
+            </button>
+        </div>
+
+        <!-- Search and Filter Section -->
+        <div class="search-filter-section">
+            <div class="search-filter-grid">
+                <div class="search-group">
+                    <label class="search-label">ค้นหาหมู่บ้าน</label>
+                    <input type="text" class="search-input" id="searchInput" placeholder="ค้นหาชื่อหมู่บ้าน, ที่อยู่, หรือผู้จัดการ..." onkeyup="filterVillages()">
+                </div>
+                <div class="search-group">
+                    <label class="search-label">สถานะ</label>
+                    <select class="filter-select" id="statusFilter" onchange="filterVillages()">
+                        <option value="">ทั้งหมด</option>
+                        <option value="active">ใช้งาน</option>
+                        <option value="inactive">ไม่ใช้งาน</option>
+                        <option value="pending">รอการตั้งค่า</option>
+                    </select>
+                </div>
+                <button class="btn btn-secondary" onclick="clearFilters()">
+                    <i class="fas fa-times"></i>
+                    ล้างตัวกรอง
+                </button>
+            </div>
+        </div>
+
+        <!-- Data Table -->
+        <div class="data-table">
+            <div class="table-header">
+                <h3 class="table-title">รายการหมู่บ้านในระบบ</h3>
+                <div class="table-stats">
+                    แสดง <span id="displayCount">3</span> จาก <span id="totalCount">3</span> หมู่บ้าน
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table id="villageTable">
+                    <thead>
+                        <tr>
+                            <th>ชื่อหมู่บ้าน</th>
+                            <th>ที่อยู่</th>
+                            <th>จำนวนทรัพย์สิน</th>
+                            <th>ผู้จัดการ</th>
+                            <th>สถานะ</th>
+                            <th>วันที่เข้าร่วม</th>
+                            <th>การดำเนินการ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="villageTableBody">
+                        <!-- Data will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination" id="pagination">
+            <!-- Pagination will be populated by JavaScript -->
+        </div>
+    </div>
+
+    <!-- Add/Edit Village Modal -->
+    <div class="modal-overlay" id="villageModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">
+                    <i class="fas fa-plus-circle"></i>
+                    เพิ่มหมู่บ้านใหม่
+                </h3>
+                <button class="modal-close" onclick="closeVillageModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-content">
+                <form id="villageForm">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label required">ชื่อหมู่บ้าน</label>
+                            <input type="text" class="form-input" id="villageName" required>
+                            <div class="form-error" id="villageNameError"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label required">จังหวัด</label>
+                            <select class="form-select" id="villageProvince" required>
+                                <option value="">เลือกจังหวัด</option>
+                                <option value="กรุงเทพมหานคร">กรุงเทพมหานคร</option>
+                                <option value="เชียงใหม่">เชียงใหม่</option>
+                                <option value="ภูเก็ต">ภูเก็ต</option>
+                                <option value="ขอนแก่น">ขอนแก่น</option>
+                                <option value="สงขลา">สงขลา</option>
+                                <option value="นครราชสีมา">นครราชสีมา</option>
+                            </select>
+                            <div class="form-error" id="villageProvinceError"></div>
+                        </div>
+                        <div class="form-group full-width">
+                            <label class="form-label required">ที่อยู่</label>
+                            <textarea class="form-textarea" id="villageAddress" placeholder="ที่อยู่ของหมู่บ้าน" required></textarea>
+                            <div class="form-error" id="villageAddressError"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label required">จำนวนทรัพย์สิน</label>
+                            <input type="number" class="form-input" id="villageProperties" min="1" required>
+                            <div class="form-error" id="villagePropertiesError"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">ผู้จัดการหมู่บ้าน</label>
+                            <select class="form-select" id="villageManager">
+                                <option value="">เลือกผู้จัดการ</option>
+                                <option value="นายสมชาย วิลเลจ">นายสมชาย วิลเลจ</option>
+                                <option value="นางสุดา บัญชี">นางสุดา บัญชี</option>
+                                <option value="นายประยุทธ์ ผู้จัดการ">นายประยุทธ์ ผู้จัดการ</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">เบอร์โทรศัพท์</label>
+                            <input type="tel" class="form-input" id="villagePhone" placeholder="02-123-4567">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">อีเมล</label>
+                            <input type="email" class="form-input" id="villageEmail" placeholder="contact@village.com">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label required">สถานะ</label>
+                            <select class="form-select" id="villageStatus" required>
+                                <option value="active">ใช้งาน</option>
+                                <option value="inactive">ไม่ใช้งาน</option>
+                                <option value="pending">รอการตั้งค่า</option>
+                            </select>
+                        </div>
+                        <div class="form-group full-width">
+                            <label class="form-label">หมายเหตุ</label>
+                            <textarea class="form-textarea" id="villageNotes" placeholder="หมายเหตุเพิ่มเติม"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" onclick="closeVillageModal()">ยกเลิก</button>
+                <button class="btn btn-primary" onclick="saveVillage()">
+                    <i class="fas fa-save"></i>
+                    บันทึก
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal-overlay" id="deleteModal">
+        <div class="modal" style="max-width: 400px;">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    <i class="fas fa-exclamation-triangle" style="color: #DC3545;"></i>
+                    ยืนยันการลบ
+                </h3>
+                <button class="modal-close" onclick="closeDeleteModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-content">
+                <p>คุณแน่ใจหรือไม่ที่จะลบหมู่บ้าน "<span id="deleteVillageName"></span>"?</p>
+                <p style="color: #DC3545; font-size: 14px; margin-top: 10px;">
+                    <i class="fas fa-warning"></i>
+                    การดำเนินการนี้ไม่สามารถยกเลิกได้
+                </p>
+            </div>
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" onclick="closeDeleteModal()">ยกเลิก</button>
+                <button class="btn btn-danger" onclick="confirmDelete()">
+                    <i class="fas fa-trash"></i>
+                    ลบหมู่บ้าน
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Village Details Modal -->
+    <div class="modal-overlay" id="detailsModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    <i class="fas fa-info-circle"></i>
+                    รายละเอียดหมู่บ้าน
+                </h3>
+                <button class="modal-close" onclick="closeDetailsModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-content" id="villageDetailsContent">
+                <!-- Details will be populated by JavaScript -->
+            </div>
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" onclick="closeDetailsModal()">ปิด</button>
+                <button class="btn btn-primary" onclick="editFromDetails()">
+                    <i class="fas fa-edit"></i>
+                    แก้ไข
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample data
+        let villages = [
+            {
+                id: 1,
+                name: "บ้านสวนลิลลี่",
+                province: "เชียงใหม่",
+                address: "123 ถนนนิมมานเหมินท์ ตำบลสุเทพ อำเภอเมือง จังหวัดเชียงใหม่ 50200",
+                properties: 150,
+                manager: "นายสมชาย วิลเลจ",
+                phone: "053-123-456",
+                email: "contact@lillypark.com",
+                status: "active",
+                joinDate: "2024-03-15",
+                notes: "หมู่บ้านขนาดกลาง มีสิ่งอำนวยความสะดวกครบครัน"
+            },
+            {
+                id: 2,
+                name: "เดอะ พาร์ค วิลเลจ",
+                province: "กรุงเทพมหานคร",
+                address: "456 ถนนสุขุมวิท แขวงคลองเตย เขตคลองเตย กรุงเทพมหานคร 10110",
+                properties: 200,
+                manager: "นางสุดา บัญชี",
+                phone: "02-234-567",
+                email: "info@theparkvillage.com",
+                status: "active",
+                joinDate: "2024-03-20",
+                notes: "หมู่บ้านในเมือง ใกล้สถานีรถไฟฟ้า"
+            },
+            {
+                id: 3,
+                name: "สมาร์ท วิลเลจ",
+                province: "ภูเก็ต",
+                address: "789 ถนนป่าตอง ตำบลป่าตอง อำเภอกะทู้ จังหวัดภูเก็ต 83150",
+                properties: 120,
+                manager: "นายประยุทธ์ ผู้จัดการ",
+                phone: "076-345-678",
+                email: "admin@smartvillage.com",
+                status: "pending",
+                joinDate: "2024-03-25",
+                notes: "หมู่บ้านใหม่ กำลังตั้งค่าระบบ"
+            }
+        ];
+
+        let currentPage = 1;
+        let itemsPerPage = 10;
+        let filteredVillages = [...villages];
+        let editingVillageId = null;
+        let deleteVillageId = null;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            renderVillageTable();
+            renderPagination();
+        });
+
+        // Render village table
+        function renderVillageTable() {
+            const tbody = document.getElementById('villageTableBody');
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const pageVillages = filteredVillages.slice(startIndex, endIndex);
+
+            if (pageVillages.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="empty-state">
+                            <div class="empty-icon">
+                                <i class="fas fa-building"></i>
+                            </div>
+                            <div class="empty-title">ไม่พบข้อมูลหมู่บ้าน</div>
+                            <div class="empty-description">ลองปรับเปลี่ยนเงื่อนไขการค้นหา หรือเพิ่มหมู่บ้านใหม่</div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = pageVillages.map(village => `
+                <tr>
+                    <td>
+                        <div style="font-weight: 500;">${village.name}</div>
+                        <div style="font-size: 12px; color: #6B7280;">${village.province}</div>
+                    </td>
+                    <td>${village.address.length > 50 ? village.address.substring(0, 50) + '...' : village.address}</td>
+                    <td>${village.properties.toLocaleString()} หน่วย</td>
+                    <td>${village.manager || '-'}</td>
+                    <td>
+                        <span class="status-badge status-${village.status}">
+                            ${getStatusText(village.status)}
+                        </span>
+                    </td>
+                    <td>${formatDate(village.joinDate)}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn btn-secondary btn-sm" onclick="viewVillageDetails(${village.id})" title="ดูรายละเอียด">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="btn btn-warning btn-sm" onclick="editVillage(${village.id})" title="แก้ไข">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteVillage(${village.id})" title="ลบ">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+
+            // Update stats
+            document.getElementById('displayCount').textContent = pageVillages.length;
+            document.getElementById('totalCount').textContent = filteredVillages.length;
+        }
+
+        // Render pagination
+        function renderPagination() {
+            const totalPages = Math.ceil(filteredVillages.length / itemsPerPage);
+            const pagination = document.getElementById('pagination');
+
+            if (totalPages <= 1) {
+                pagination.innerHTML = '';
+                return;
+            }
+
+            let paginationHTML = `
+                <button class="pagination-btn" onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+            `;
+
+            for (let i = 1; i <= totalPages; i++) {
+                if (i === 1 || i === totalPages || (i >= currentPage - 2 && i <= currentPage + 2)) {
+                    paginationHTML += `
+                        <button class="pagination-btn ${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">
+                            ${i}
+                        </button>
+                    `;
+                } else if (i === currentPage - 3 || i === currentPage + 3) {
+                    paginationHTML += `<span class="pagination-btn" style="border: none; background: none;">...</span>`;
+                }
+            }
+
+            paginationHTML += `
+                <button class="pagination-btn" onclick="changePage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            `;
+
+            pagination.innerHTML = paginationHTML;
+        }
+
+        // Change page
+        function changePage(page) {
+            const totalPages = Math.ceil(filteredVillages.length / itemsPerPage);
+            if (page >= 1 && page <= totalPages) {
+                currentPage = page;
+                renderVillageTable();
+                renderPagination();
+            }
+        }
+
+        // Filter villages
+        function filterVillages() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const statusFilter = document.getElementById('statusFilter').value;
+
+            filteredVillages = villages.filter(village => {
+                const matchesSearch = !searchTerm || 
+                    village.name.toLowerCase().includes(searchTerm) ||
+                    village.address.toLowerCase().includes(searchTerm) ||
+                    village.manager.toLowerCase().includes(searchTerm) ||
+                    village.province.toLowerCase().includes(searchTerm);
+
+                const matchesStatus = !statusFilter || village.status === statusFilter;
+
+                return matchesSearch && matchesStatus;
+            });
+
+            currentPage = 1;
+            renderVillageTable();
+            renderPagination();
+        }
+
+        // Clear filters
+        function clearFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('statusFilter').value = '';
+            filteredVillages = [...villages];
+            currentPage = 1;
+            renderVillageTable();
+            renderPagination();
+        }
+
+        // Open add village modal
+        function openAddVillageModal() {
+            editingVillageId = null;
+            document.getElementById('modalTitle').innerHTML = '<i class="fas fa-plus-circle"></i> เพิ่มหมู่บ้านใหม่';
+            document.getElementById('villageForm').reset();
+            clearFormErrors();
+            document.getElementById('villageModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Edit village
+        function editVillage(id) {
+            const village = villages.find(v => v.id === id);
+            if (!village) return;
+
+            editingVillageId = id;
+            document.getElementById('modalTitle').innerHTML = '<i class="fas fa-edit"></i> แก้ไขข้อมูลหมู่บ้าน';
+            
+            // Populate form
+            document.getElementById('villageName').value = village.name;
+            document.getElementById('villageProvince').value = village.province;
+            document.getElementById('villageAddress').value = village.address;
+            document.getElementById('villageProperties').value = village.properties;
+            document.getElementById('villageManager').value = village.manager || '';
+            document.getElementById('villagePhone').value = village.phone || '';
+            document.getElementById('villageEmail').value = village.email || '';
+            document.getElementById('villageStatus').value = village.status;
+            document.getElementById('villageNotes').value = village.notes || '';
+
+            clearFormErrors();
+            document.getElementById('villageModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // View village details
+        function viewVillageDetails(id) {
+            const village = villages.find(v => v.id === id);
+            if (!village) return;
+
+            const detailsContent = document.getElementById('villageDetailsContent');
+            detailsContent.innerHTML = `
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">ชื่อหมู่บ้าน</label>
+                        <div style="padding: 10px; background: #F8F9FA; border-radius: 6px;">${village.name}</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">จังหวัด</label>
+                        <div style="padding: 10px; background: #F8F9FA; border-radius: 6px;">${village.province}</div>
+                    </div>
+                    <div class="form-group full-width">
+                        <label class="form-label">ที่อยู่</label>
+                        <div style="padding: 10px; background: #F8F9FA; border-radius: 6px;">${village.address}</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">จำนวนทรัพย์สิน</label>
+                        <div style="padding: 10px; background: #F8F9FA; border-radius: 6px;">${village.properties.toLocaleString()} หน่วย</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">ผู้จัดการหมู่บ้าน</label>
+                        <div style="padding: 10px; background: #F8F9FA; border-radius: 6px;">${village.manager || '-'}</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">เบอร์โทรศัพท์</label>
+                        <div style="padding: 10px; background: #F8F9FA; border-radius: 6px;">${village.phone || '-'}</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">อีเมล</label>
+                        <div style="padding: 10px; background: #F8F9FA; border-radius: 6px;">${village.email || '-'}</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">สถานะ</label>
+                        <div style="padding: 10px; background: #F8F9FA; border-radius: 6px;">
+                            <span class="status-badge status-${village.status}">${getStatusText(village.status)}</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">วันที่เข้าร่วม</label>
+                        <div style="padding: 10px; background: #F8F9FA; border-radius: 6px;">${formatDate(village.joinDate)}</div>
+                    </div>
+                    <div class="form-group full-width">
+                        <label class="form-label">หมายเหตุ</label>
+                        <div style="padding: 10px; background: #F8F9FA; border-radius: 6px; min-height: 60px;">${village.notes || '-'}</div>
+                    </div>
+                </div>
+            `;
+
+            editingVillageId = id; // Store for edit button
+            document.getElementById('detailsModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Edit from details modal
+        function editFromDetails() {
+            closeDetailsModal();
+            editVillage(editingVillageId);
+        }
+
+        // Delete village
+        function deleteVillage(id) {
+            const village = villages.find(v => v.id === id);
+            if (!village) return;
+
+            deleteVillageId = id;
+            document.getElementById('deleteVillageName').textContent = village.name;
+            document.getElementById('deleteModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Confirm delete
+        function confirmDelete() {
+            if (deleteVillageId) {
+                villages = villages.filter(v => v.id !== deleteVillageId);
+                filteredVillages = filteredVillages.filter(v => v.id !== deleteVillageId);
+                
+                // Adjust current page if necessary
+                const totalPages = Math.ceil(filteredVillages.length / itemsPerPage);
+                if (currentPage > totalPages && totalPages > 0) {
+                    currentPage = totalPages;
+                }
+
+                renderVillageTable();
+                renderPagination();
+                closeDeleteModal();
+                
+                // Show success message
+                showNotification('ลบหมู่บ้านเรียบร้อยแล้ว', 'success');
+            }
+        }
+
+        // Save village
+        function saveVillage() {
+            if (!validateForm()) return;
+
+            const formData = {
+                name: document.getElementById('villageName').value,
+                province: document.getElementById('villageProvince').value,
+                address: document.getElementById('villageAddress').value,
+                properties: parseInt(document.getElementById('villageProperties').value),
+                manager: document.getElementById('villageManager').value,
+                phone: document.getElementById('villagePhone').value,
+                email: document.getElementById('villageEmail').value,
+                status: document.getElementById('villageStatus').value,
+                notes: document.getElementById('villageNotes').value
+            };
+
+            if (editingVillageId) {
+                // Update existing village
+                const villageIndex = villages.findIndex(v => v.id === editingVillageId);
+                if (villageIndex !== -1) {
+                    villages[villageIndex] = { ...villages[villageIndex], ...formData };
+                    showNotification('อัปเดตข้อมูลหมู่บ้านเรียบร้อยแล้ว', 'success');
+                }
+            } else {
+                // Add new village
+                const newVillage = {
+                    id: Math.max(...villages.map(v => v.id)) + 1,
+                    ...formData,
+                    joinDate: new Date().toISOString().split('T')[0]
+                };
+                villages.push(newVillage);
+                showNotification('เพิ่มหมู่บ้านใหม่เรียบร้อยแล้ว', 'success');
+            }
+
+            // Refresh data
+            filterVillages();
+            closeVillageModal();
+        }
+
+        // Validate form
+        function validateForm() {
+            clearFormErrors();
+            let isValid = true;
+
+            const name = document.getElementById('villageName').value.trim();
+            const province = document.getElementById('villageProvince').value;
+            const address = document.getElementById('villageAddress').value.trim();
+            const properties = document.getElementById('villageProperties').value;
+
+            if (!name) {
+                showFieldError('villageNameError', 'กรุณากรอกชื่อหมู่บ้าน');
+                isValid = false;
+            }
+
+            if (!province) {
+                showFieldError('villageProvinceError', 'กรุณาเลือกจังหวัด');
+                isValid = false;
+            }
+
+            if (!address) {
+                showFieldError('villageAddressError', 'กรุณากรอกที่อยู่');
+                isValid = false;
+            }
+
+            if (!properties || properties < 1) {
+                showFieldError('villagePropertiesError', 'กรุณากรอกจำนวนทรัพย์สินที่ถูกต้อง');
+                isValid = false;
+            }
+
+            return isValid;
+        }
+
+        // Show field error
+        function showFieldError(errorId, message) {
+            const errorElement = document.getElementById(errorId);
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+        }
+
+        // Clear form errors
+        function clearFormErrors() {
+            const errorElements = document.querySelectorAll('.form-error');
+            errorElements.forEach(element => {
+                element.textContent = '';
+                element.style.display = 'none';
+            });
+        }
+
+        // Close modals
+        function closeVillageModal() {
+            document.getElementById('villageModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function closeDeleteModal() {
+            document.getElementById('deleteModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+            deleteVillageId = null;
+        }
+
+        function closeDetailsModal() {
+            document.getElementById('detailsModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Utility functions
+        function getStatusText(status) {
+            const statusMap = {
+                'active': 'ใช้งาน',
+                'inactive': 'ไม่ใช้งาน',
+                'pending': 'รอการตั้งค่า'
+            };
+            return statusMap[status] || status;
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('th-TH', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+        }
+
+        function showNotification(message, type = 'info') {
+            // Simple notification - in real app, use a proper notification library
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 15px 20px;
+                background: ${type === 'success' ? '#28A745' : '#1A2B48'};
+                color: white;
+                border-radius: 8px;
+                z-index: 3000;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+                font-family: 'Prompt', sans-serif;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Close modals when clicking outside
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    if (this.id === 'villageModal') closeVillageModal();
+                    else if (this.id === 'deleteModal') closeDeleteModal();
+                    else if (this.id === 'detailsModal') closeDetailsModal();
+                }
+            });
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                // Close any open modal
+                if (document.getElementById('villageModal').classList.contains('active')) {
+                    closeVillageModal();
+                } else if (document.getElementById('deleteModal').classList.contains('active')) {
+                    closeDeleteModal();
+                } else if (document.getElementById('detailsModal').classList.contains('active')) {
+                    closeDetailsModal();
+                }
+            }
+        });
+    </script>
+</body>
+</html>
+
