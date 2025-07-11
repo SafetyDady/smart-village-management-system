@@ -449,3 +449,105 @@ body {
   }
 }
 
+
+
+/* Export Button Styles */
+.btn {
+  @apply inline-flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 cursor-pointer border;
+}
+
+.btn:hover {
+  @apply transform -translate-y-0.5 shadow-lg;
+}
+
+.btn-primary {
+  @apply bg-primary text-white border-primary;
+}
+
+.btn-primary:hover {
+  @apply bg-primary/90 border-primary/90;
+}
+
+.btn-secondary {
+  @apply bg-secondary text-white border-secondary;
+}
+
+.btn-secondary:hover {
+  @apply bg-secondary/90 border-secondary/90;
+}
+
+.btn-outline {
+  @apply bg-transparent text-primary border-primary;
+}
+
+.btn-outline:hover {
+  @apply bg-primary text-white;
+}
+
+/* Charts Container */
+.charts-container {
+  @apply space-y-6;
+}
+
+/* Export Section */
+.export-section {
+  @apply bg-card rounded-lg p-6 shadow-sm border border-border;
+}
+
+.export-grid {
+  @apply grid grid-cols-1 md:grid-cols-3 gap-4;
+}
+
+/* Responsive Design for Export Buttons */
+@media (max-width: 768px) {
+  .export-grid {
+    @apply grid-cols-1 gap-3;
+  }
+  
+  .btn {
+    @apply w-full justify-center;
+  }
+}
+
+
+/* Village Selector Styles */
+.village-selector {
+  @apply mr-4;
+}
+
+.village-select {
+  @apply bg-white border border-border rounded-lg px-3 py-2 text-sm font-medium text-foreground;
+  @apply focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent;
+  @apply hover:border-primary/50 transition-colors duration-200;
+  min-width: 200px;
+}
+
+.village-select:focus {
+  @apply shadow-lg;
+}
+
+/* Header Responsive Design */
+@media (max-width: 768px) {
+  .village-selector {
+    @apply mr-2;
+  }
+  
+  .village-select {
+    @apply text-xs px-2 py-1;
+    min-width: 150px;
+  }
+  
+  .header-right {
+    @apply flex-wrap gap-2;
+  }
+}
+
+/* Multi-Tenant Loading State */
+.village-loading {
+  @apply opacity-50 pointer-events-none;
+}
+
+.village-loading .village-select {
+  @apply bg-gray-100 cursor-not-allowed;
+}
+
