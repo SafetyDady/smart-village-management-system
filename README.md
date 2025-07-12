@@ -1,350 +1,325 @@
-# Smart Village Management System
+# Smart Village Management System (LIFF Edition)
 
-## 🏘️ ภาพรวมโปรเจกต์
+A comprehensive village management system built with FastAPI backend and LINE LIFF integration for modern community management.
 
-Smart Village Management System เป็นระบบจัดการหมู่บ้านอัจฉริยะที่ออกแบบมาเพื่อลดภาระงานของผู้ดูแล เพิ่มความสะดวกสบายให้ผู้อยู่อาศัย และสร้างความโปร่งใสทางการเงิน โดยใช้ FastAPI เป็น Backend และรองรับการเชื่อมต่อกับ LINE Platform
+## 🏗️ Architecture
 
-## 🏗️ สถาปัตยกรรมระบบ
+This system follows a 4-service microservices architecture with the following components:
 
-### Backend-First Architecture
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    SMART VILLAGE SYSTEM                     │
-├─────────────────────────────────────────────────────────────┤
-│  📊 Swagger UI       🔧 FastAPI Backend    📱 Future LIFF   │
-│  (API Testing)       (Core System)         (Planned)        │
-│                                                             │
-│  ┌─────────────────────────────────────────────────────┐   │
-│  │              💾 PostgreSQL Database                 │   │
-│  │         (Data Storage & Management)                 │   │
-│  └─────────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────────┘
-```
+- **Backend API**: FastAPI with PostgreSQL database
+- **Landing Page**: Next.js marketing website (`frontend-landing/`)
+- **Admin Dashboard**: React TypeScript application (planned)
+- **LIFF PWA**: React Progressive Web App for residents (`frontend-user/`)
+- **Authentication**: JWT + LINE LIFF integration
 
-### Current Implementation
-| Component | Technology | Status | Purpose |
-|-----------|------------|--------|---------|
-| **🔧 Backend API** | FastAPI + Python 3.11 | ✅ Active | Core Business Logic & API |
-| **💾 Database** | PostgreSQL + SQLAlchemy | ✅ Active | Data Storage |
-| **📊 API Documentation** | Swagger UI | ✅ Active | API Testing & Documentation |
-| **🔐 Authentication** | JWT + Bcrypt | ✅ Active | User Authentication |
-| **💰 Accounting System** | SQLAlchemy Models | ✅ Active | Invoice, Payment, Receipt Management |
-| **📱 Frontend** | React/Next.js | 🔄 Planned | User Interface |
+## 🚀 Features
 
-## 🚀 ฟีเจอร์ที่พร้อมใช้งาน
+### Core Features
+- **User Management**: Multi-role user system (Super Admin, Village Admin, Accounting Admin, Resident)
+- **Village Management**: Complete village information and property management
+- **Property Management**: Unit tracking, ownership, and resident assignment
+- **Authentication**: Secure JWT-based auth with LINE LIFF integration
+- **Access Control**: Role-based permissions and security
 
-### 👥 ระบบจัดการผู้ใช้
-- ✅ การสมัครสมาชิกและเข้าสู่ระบบ
-- ✅ ระบบ Role-based Access Control (Super Admin, Village Admin, Accounting Admin, Resident)
-- ✅ การจัดการข้อมูลส่วนตัว
-- ✅ ระบบรีเซ็ตรหัสผ่าน
-- ✅ การล็อคบัญชีเมื่อเข้าสู่ระบบผิดหลายครั้ง
+### LINE Integration
+- LINE LIFF for mobile-first experience
+- LINE Login authentication
+- LINE Notify for notifications
+- Seamless mobile user experience
 
-### 🏘️ ระบบจัดการหมู่บ้าน
-- ✅ การสร้างและจัดการข้อมูลหมู่บ้าน
-- ✅ การตั้งค่าหมู่บ้าน (ค่าบำรุง, การแจ้งเตือน, ระบบประตู)
-- ✅ การจัดการข้อมูลที่อยู่และการติดต่อ
-- ✅ ระบบสีและการตั้งค่าการแสดงผล
+## 📋 Prerequisites
 
-### 🏠 ระบบจัดการทรัพย์สิน
-- ✅ การสร้างและจัดการข้อมูลทรัพย์สิน/บ้าน
-- ✅ การจัดการประเภททรัพย์สิน (บ้าน, คอนโด, ทาวน์เฮาส์)
-- ✅ การติดตามสถานะการเข้าพัก
-- ✅ การจัดการข้อมูลเจ้าของและผู้เช่า
-- ✅ ระบบมิเตอร์และสาธารณูปโภค
+Before you begin, ensure you have the following installed:
 
-### 🔐 ระบบความปลอดภัย
-- ✅ JWT Token Authentication
-- ✅ Password Hashing ด้วย Bcrypt
-- ✅ Rate Limiting สำหรับการเข้าสู่ระบบ
-- ✅ Session Management
-- ✅ API Security Headers
-
-### 💰 ระบบบัญชี (Phase 2)
-- ✅ การสร้างและจัดการใบแจ้งหนี้ (Invoice Management)
-- ✅ ระบบการชำระเงิน 5 วิธี (Cash, Bank Transfer, Credit Card, QR Code, LINE Pay)
-- ✅ การออกใบเสร็จอัตโนมัติ (Auto Receipt Generation)
-- ✅ ระบบ FIFO Payment Allocation (จัดสรรการชำระเงินแบบเข้าก่อนออกก่อน)
-- ✅ รองรับการชำระเงินบางส่วน (Partial Payment Support)
-- ✅ ติดตามสถานะการชำระเงินและใบแจ้งหนี้ค้างชำระ
-- ✅ ระบบ Audit Trail สำหรับการเงิน
-
-## 📁 โครงสร้างโปรเจกต์
-
-```
-smart-village-management-system/
-├── backend/                    # FastAPI Backend
-│   ├── app/
-│   │   ├── api/               # API routes
-│   │   │   └── v1/
-│   │   │       ├── endpoints/ # API endpoints
-│   │   │       │   ├── auth.py
-│   │   │       │   ├── users.py
-│   │   │       │   ├── villages.py
-│   │   │       │   └── properties.py
-│   │   │       └── api.py
-│   │   ├── core/              # Core configurations
-│   │   │   ├── config.py
-│   │   │   ├── database.py
-│   │   │   └── security.py
-│   │   ├── models/            # SQLAlchemy models
-│   │   │   ├── user.py
-│   │   │   ├── village.py
-│   │   │   ├── property.py
-│   │   │   ├── invoice.py        # Phase 2: Accounting
-│   │   │   ├── payment.py        # Phase 2: Accounting
-│   │   │   ├── receipt.py        # Phase 2: Accounting
-│   │   │   └── payment_invoice.py # Phase 2: Accounting
-│   │   ├── schemas/           # Pydantic schemas
-│   │   │   ├── auth.py
-│   │   │   ├── user.py
-│   │   │   ├── village.py
-│   │   │   ├── property.py
-│   │   │   ├── invoice.py        # Phase 2: Accounting
-│   │   │   ├── payment.py        # Phase 2: Accounting
-│   │   │   └── receipt.py        # Phase 2: Accounting
-│   │   ├── services/          # Business logic
-│   │   │   ├── auth_service.py
-│   │   │   ├── user_service.py
-│   │   │   ├── village_service.py
-│   │   │   ├── property_service.py
-│   │   │   ├── invoice_service.py    # Phase 2: Accounting
-│   │   │   ├── payment_service.py    # Phase 2: Accounting
-│   │   │   ├── receipt_service.py    # Phase 2: Accounting
-│   │   │   └── line_service.py
-│   │   └── main.py           # FastAPI application
-│   ├── alembic/               # Database migrations
-│   ├── .env                   # Environment variables
-│   └── requirements.txt       # Python dependencies
-├── README.md
-└── .gitignore
-```
-
-## 🛠️ Technology Stack
-
-### Backend
-- **Framework**: FastAPI 0.104+
-- **Language**: Python 3.11
-- **Database**: PostgreSQL 15
-- **ORM**: SQLAlchemy 2.0
-- **Migration**: Alembic
-- **Authentication**: JWT + Bcrypt
-- **Validation**: Pydantic v2
-- **Documentation**: Swagger UI + ReDoc
-
-### Development Tools
-- **Environment**: Python Virtual Environment
-- **Package Manager**: pip
-- **Code Quality**: Type hints + Pydantic validation
-- **API Testing**: Swagger UI (built-in)
-
-## 🚀 การเริ่มต้นพัฒนา
-
-### Prerequisites
 - Python 3.11+
-- PostgreSQL 15+
-- Git
+- Node.js 18+
+- PostgreSQL 13+
+- Redis 6+ (optional, for caching)
 
-### Backend Setup
+## 🛠️ Installation
+
+### 1. Clone the Repository
+
 ```bash
-# Clone repository
 git clone https://github.com/SafetyDady/smart-village-management-system.git
-cd smart-village-management-system/backend
+cd smart-village-management-system
+```
+
+### 2. Backend Setup
+
+```bash
+cd backend
 
 # Create virtual environment
 python -m venv venv
-source venv/bin/activate  # Linux/Mac
-# หรือ venv\Scripts\activate  # Windows
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 
 # Install dependencies
 pip install -r requirements.txt
 
-# Setup environment variables
+# Copy environment file
 cp .env.example .env
-# แก้ไขค่าใน .env ให้เหมาะสม
-
-# Setup database
-# สร้าง database ใน PostgreSQL ก่อน
-alembic upgrade head
-
-# Run development server
-uvicorn app.main:app --reload
 ```
 
-### การเข้าถึงระบบ
-- **API Documentation**: http://127.0.0.1:8000/api/v1/docs
-- **Alternative Docs**: http://127.0.0.1:8000/redoc
-- **Health Check**: http://127.0.0.1:8000/health
-- **Root Endpoint**: http://127.0.0.1:8000/
+### 3. Environment Configuration
 
-### Default Super Admin
-```
-Email: admin@example.com
-Password: admin123
-```
-
-## 📊 API Endpoints
-
-### Authentication
-- `POST /api/v1/auth/login` - เข้าสู่ระบบ
-- `POST /api/v1/auth/refresh` - รีเฟรช Token
-- `POST /api/v1/auth/logout` - ออกจากระบบ
-
-### Users Management
-- `GET /api/v1/users/` - ดูรายการผู้ใช้
-- `POST /api/v1/users/` - สร้างผู้ใช้ใหม่
-- `GET /api/v1/users/{user_id}` - ดูข้อมูลผู้ใช้
-- `PUT /api/v1/users/{user_id}` - แก้ไขข้อมูลผู้ใช้
-- `DELETE /api/v1/users/{user_id}` - ลบผู้ใช้
-
-### Villages Management
-- `GET /api/v1/villages/` - ดูรายการหมู่บ้าน
-- `POST /api/v1/villages/` - สร้างหมู่บ้านใหม่
-- `GET /api/v1/villages/{village_id}` - ดูข้อมูลหมู่บ้าน
-- `PUT /api/v1/villages/{village_id}` - แก้ไขข้อมูลหมู่บ้าน
-- `DELETE /api/v1/villages/{village_id}` - ลบหมู่บ้าน
-
-### Properties Management
-- `GET /api/v1/properties/` - ดูรายการทรัพย์สิน
-- `POST /api/v1/properties/` - สร้างทรัพย์สินใหม่
-- `GET /api/v1/properties/{property_id}` - ดูข้อมูลทรัพย์สิน
-- `PUT /api/v1/properties/{property_id}` - แก้ไขข้อมูลทรัพย์สิน
-- `DELETE /api/v1/properties/{property_id}` - ลบทรัพย์สิน
-
-### Accounting Management (Phase 2)
-- `GET /api/v1/invoices/` - ดูรายการใบแจ้งหนี้
-- `POST /api/v1/invoices/` - สร้างใบแจ้งหนี้ใหม่
-- `GET /api/v1/invoices/{invoice_id}` - ดูข้อมูลใบแจ้งหนี้
-- `PUT /api/v1/invoices/{invoice_id}` - แก้ไขใบแจ้งหนี้
-- `POST /api/v1/payments/` - บันทึกการชำระเงิน
-- `GET /api/v1/payments/` - ดูรายการการชำระเงิน
-- `GET /api/v1/receipts/` - ดูรายการใบเสร็จ
-- `POST /api/v1/receipts/generate` - สร้างใบเสร็จอัตโนมัติ
-
-## 📊 แผนการพัฒนา
-
-### Phase 1: Foundation ✅ เสร็จแล้ว
-- ✅ Backend API Foundation
-- ✅ Database Schema & Models
-- ✅ Authentication System
-- ✅ User Management
-- ✅ Village Management
-- ✅ Property Management
-- ✅ API Documentation
-
-### Phase 2: Village Accounting ✅ เสร็จแล้ว
-- ✅ Invoice Management System
-- ✅ Payment Processing (5 วิธีการชำระ)
-- ✅ Receipt Generation (Auto-generated)
-- ✅ FIFO Payment Allocation
-- ✅ Partial Payment Support
-- ✅ Accounting Database Schema
-
-### Phase 3: Enhanced Access Control 📋 วางแผน
-- 📋 Access Logs
-- 📋 Visitor Management
-- 📋 QR Code System
-- 📋 License Plate Recognition
-
-### Phase 4: LINE Integration 📋 วางแผน
-- 📋 LINE LIFF Integration
-- 📋 LINE Messaging API
-- 📋 Notification System
-- 📋 LINE Pay Integration
-
-### Phase 5: Frontend Development 📋 วางแผน
-- 📋 Admin Dashboard (React)
-- 📋 Resident Portal (LIFF PWA)
-- 📋 Landing Page (Next.js)
-
-## 🔧 การกำหนดค่า Environment Variables
+Edit the `.env` file with your configuration:
 
 ```bash
-# Security
-SECRET_KEY=your-secret-key-here
-ACCESS_TOKEN_EXPIRE_MINUTES=30
-REFRESH_TOKEN_EXPIRE_DAYS=7
-
 # Database
-DATABASE_URL=postgresql://username:password@localhost:5432/smart_village
+DATABASE_URL=postgresql://postgres:password@localhost:5432/smart_village
 
-# Redis (Optional)
-REDIS_URL=redis://localhost:6379/0
+# Security
+SECRET_KEY=your_super_secret_key_here
 
-# Email (Optional)
-SMTP_HOST=smtp.gmail.com
-SMTP_PORT=587
-SMTP_USER=your-email@gmail.com
-SMTP_PASSWORD=your-app-password
-EMAILS_FROM_EMAIL=your-email@gmail.com
-EMAILS_FROM_NAME="Smart Village Admin"
-
-# Environment
-ENVIRONMENT=development
-DEBUG=true
-
-# LINE Integration (Future)
-LINE_CHANNEL_ID=
-LINE_CHANNEL_SECRET=
-LINE_CHANNEL_ACCESS_TOKEN=
-LINE_LIFF_ID=
+# LINE Platform
+LINE_CHANNEL_ID=your_line_channel_id
+LINE_CHANNEL_SECRET=your_line_channel_secret
+LIFF_ID=your_liff_app_id
 ```
 
-## 🧪 การทดสอบ
+### 4. Database Setup
 
-### Manual Testing
-1. เปิด Swagger UI: http://localhost:8000/api/v1/docs
-2. ทดสอบ Login ด้วย Super Admin account
-3. Authorize ใน Swagger UI
-4. ทดสอบ CRUD operations สำหรับ Users, Villages, Properties
+```bash
+# Create database
+createdb smart_village
 
-### API Testing Examples
+# Run migrations
+alembic upgrade head
+```
+
+### 5. Run Development Server
+
+```bash
+# Start backend server
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+```
+
+The API will be available at:
+- **API**: http://localhost:8000
+- **Documentation**: http://localhost:8000/docs
+- **OpenAPI Schema**: http://localhost:8000/openapi.json
+
+## 🧪 Testing
+
+### Run Tests
+
+```bash
+# Run all tests
+python -m pytest
+
+# Run with coverage
+python -m pytest --cov=app
+
+# Run specific test file
+python -m pytest tests/test_users.py -v
+
+# Run specific test
+python -m pytest tests/test_users.py::TestUserEndpoints::test_login_success -v
+```
+
+### Test Database
+
+Tests use SQLite in-memory database by default. No additional setup required.
+
+## 📊 Database Schema
+
+### Core Models
+
+- **Users**: User accounts with roles and LINE integration
+- **Villages**: Village information and settings
+- **Properties**: Property units within villages
+
+### Relationships
+
+- Users can belong to multiple villages (many-to-many)
+- Properties belong to one village (one-to-many)
+- Users can own/rent multiple properties (many-to-many)
+
+## 🔐 Authentication
+
+### JWT Authentication
+
 ```bash
 # Login
-curl -X POST "http://localhost:8000/api/v1/auth/login" \
-  -H "Content-Type: application/x-www-form-urlencoded" \
-  -d "username=admin@example.com&password=admin123"
+POST /api/v1/auth/login
+{
+  "username": "user@example.com",
+  "password": "password"
+}
 
-# Create Village (ต้องใส่ Authorization header)
-curl -X POST "http://localhost:8000/api/v1/villages/" \
-  -H "Authorization: Bearer YOUR_TOKEN_HERE" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "name": "Smart Village 1",
-    "code": "SV001",
-    "description": "A smart village for modern living",
-    "address": "123 Main St",
-    "city": "Bangkok",
-    "state": "Bangkok",
-    "postal_code": "10000"
-  }'
+# Response
+{
+  "access_token": "eyJ...",
+  "refresh_token": "eyJ...",
+  "token_type": "bearer"
+}
 ```
 
-## 🐛 การแก้ไขปัญหา
+### LINE LIFF Authentication
 
-### ปัญหาที่พบบ่อย
+```bash
+# LINE LIFF Login
+POST /api/v1/auth/line-login
+{
+  "id_token": "line_id_token",
+  "access_token": "line_access_token"
+}
+```
 
-1. **Database Connection Error**
-   - ตรวจสอบ PostgreSQL service ทำงานหรือไม่
-   - ตรวจสอบ DATABASE_URL ใน .env
+## 📚 API Documentation
 
-2. **Import Error**
-   - ตรวจสอบ virtual environment ถูก activate หรือไม่
-   - รัน `pip install -r requirements.txt` ใหม่
+### Core Endpoints
 
-3. **Authentication Error**
-   - ตรวจสอบ SECRET_KEY ใน .env
-   - ตรวจสอบ Token expiration
+#### Authentication
+- `POST /api/v1/auth/login` - User login
+- `POST /api/v1/auth/line-login` - LINE LIFF login
+- `POST /api/v1/auth/refresh` - Refresh token
+- `POST /api/v1/auth/logout` - Logout
+- `GET /api/v1/auth/me` - Get current user
 
-## 📞 การติดต่อ
+#### Users
+- `GET /api/v1/users/` - List users
+- `POST /api/v1/users/` - Create user
+- `GET /api/v1/users/{id}` - Get user by ID
+- `PUT /api/v1/users/{id}` - Update user
+- `DELETE /api/v1/users/{id}` - Delete user
 
-- **Project**: Smart Village Management System
-- **Version**: 2.0.0 (Phase 2 Complete - Village Accounting)
-- **Repository**: https://github.com/SafetyDady/smart-village-management-system
-- **License**: Private
-- **Status**: Active Development
+#### Villages
+- `GET /api/v1/villages/` - List villages
+- `POST /api/v1/villages/` - Create village
+- `GET /api/v1/villages/{id}` - Get village by ID
+- `PUT /api/v1/villages/{id}` - Update village
+
+#### Properties
+- `GET /api/v1/properties/` - List properties
+- `POST /api/v1/properties/` - Create property
+- `GET /api/v1/properties/{id}` - Get property by ID
+- `PUT /api/v1/properties/{id}` - Update property
+
+### Interactive Documentation
+
+Visit http://localhost:8000/docs for interactive API documentation with Swagger UI.
+
+## 🔧 Development
+
+### Database Migrations
+
+```bash
+# Create new migration
+alembic revision --autogenerate -m "description"
+
+# Apply migrations
+alembic upgrade head
+
+# Rollback migration
+alembic downgrade -1
+```
+
+### Code Quality
+
+```bash
+# Format code
+black app/
+
+# Lint code
+flake8 app/
+
+# Type checking
+mypy app/
+```
+
+## 🚀 Deployment
+
+### Production Environment
+
+1. Set production environment variables
+2. Use production database (PostgreSQL)
+3. Configure reverse proxy (nginx)
+4. Use process manager (systemd, supervisor)
+
+### Docker Deployment
+
+```bash
+# Build image
+docker build -t smart-village-backend .
+
+# Run container
+docker run -p 8000:8000 smart-village-backend
+```
+
+## 📁 Project Structure
+
+```
+smart-village-management-system/
+├── backend/                   # FastAPI Backend
+│   ├── app/
+│   │   ├── api/
+│   │   │   └── v1/
+│   │   │       ├── endpoints/     # API route handlers
+│   │   │       └── api.py         # API router
+│   │   ├── core/
+│   │   │   ├── config.py          # Configuration settings
+│   │   │   ├── database.py        # Database connection
+│   │   │   └── security.py        # Security utilities
+│   │   ├── models/                # SQLAlchemy models
+│   │   ├── schemas/               # Pydantic schemas
+│   │   ├── services/              # Business logic
+│   │   └── main.py                # FastAPI application
+│   ├── alembic/                   # Database migrations
+│   ├── tests/                     # Test files
+│   ├── requirements.txt           # Python dependencies
+│   ├── .env.example              # Environment template
+│   └── alembic.ini               # Alembic configuration
+├── frontend-landing/          # Next.js Landing Page
+│   ├── src/
+│   │   ├── app/                   # Next.js 14 App Router
+│   │   └── components/            # React components
+│   ├── public/                    # Static assets
+│   ├── package.json              # Dependencies
+│   └── next.config.js            # Next.js configuration
+├── frontend-user/             # React LIFF PWA
+│   ├── src/
+│   │   ├── components/            # React components
+│   │   └── App.jsx               # Main application
+│   ├── public/                    # Static assets
+│   ├── package.json              # Dependencies
+│   └── vite.config.js            # Vite configuration
+└── docs/                      # Documentation
+    └── progress-log.md           # Development progress
+```
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🆘 Support
+
+For support and questions:
+
+- Create an issue on GitHub
+- Contact the development team
+- Check the documentation at `/docs`
+
+## 🔄 Changelog
+
+### Version 1.0.0 (Current)
+- Initial release with core functionality
+- FastAPI backend with authentication
+- Database models and migrations
+- Basic API endpoints
+- Test suite setup
+- Documentation
 
 ---
 
-*Smart Village Management System - Making village management smarter, easier, and more transparent.*
+**Smart Village Management System** - Building better communities through technology.
 

@@ -2,44 +2,56 @@ from logging.config import fileConfig
 import os
 import sys
 
-# ✅ โหลด .env เพื่อให้สามารถใช้ DATABASE_URL จากไฟล์ .env ได้
-from dotenv import load_dotenv
-load_dotenv()
-
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
+
 from alembic import context
 
-# ✅ เพิ่ม path ให้สามารถ import จาก app ได้
+# Add the app directory to the Python path
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
-# ✅ Import Base และ Models ทั้งหมดที่ใช้ใน metadata
+# Import the Base and models
 from app.core.database import Base
 from app.models.user import User
-from app.models.village import Village
-from app.models.property import Property
-from app.models.invoice import Invoice
-from app.models.payment import Payment
-from app.models.receipt import Receipt
-from app.models.payment_invoice import PaymentInvoice
+from app.models.village import Village, Property
 
-# ✅ อ่าน Alembic config object
+# this is the Alembic Config object, which provides
+# access to the values within the .ini file in use.
 config = context.config
 
-# ✅ อ่าน DATABASE_URL จาก environment หรือใช้ fallback (กรณียังไม่มี .env)
+# Override sqlalchemy.url from environment variable if available
 database_url = os.getenv("DATABASE_URL", "postgresql://postgres:password@localhost:5432/smart_village")
 config.set_main_option("sqlalchemy.url", database_url)
 
-# ✅ ตั้งค่าการ log จากไฟล์ alembic.ini ถ้ามี
+# Interpret the config file for Python logging.
+# This line sets up loggers basically.
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-# ✅ ระบุ metadata สำหรับ autogenerate
+# add your model's MetaData object here
+# for 'autogenerate' support
+# from myapp import mymodel
+# target_metadata = mymodel.Base.metadata
 target_metadata = Base.metadata
 
-# -------------------------------
-# 🚀 โหมด offline: generate SQL script
+# other values from the config, defined by the needs of env.py,
+# can be acquired:
+# my_important_option = config.get_main_option("my_important_option")
+# ... etc.
+
+
 def run_migrations_offline() -> None:
+    """Run migrations in 'offline' mode.
+
+    This configures the context with just a URL
+    and not an Engine, though an Engine is acceptable
+    here as well.  By skipping the Engine creation
+    we don't even need a DBAPI to be available.
+
+    Calls to context.execute() here emit the given string to the
+    script output.
+
+    """
     url = config.get_main_option("sqlalchemy.url")
     context.configure(
         url=url,
@@ -51,8 +63,14 @@ def run_migrations_offline() -> None:
     with context.begin_transaction():
         context.run_migrations()
 
-# 🚀 โหมด online: connect DB และ migrate จริง
+
 def run_migrations_online() -> None:
+    """Run migrations in 'online' mode.
+
+    In this scenario we need to create an Engine
+    and associate a connection with the context.
+
+    """
     connectable = engine_from_config(
         config.get_section(config.config_ini_section, {}),
         prefix="sqlalchemy.",
@@ -60,12 +78,14 @@ def run_migrations_online() -> None:
     )
 
     with connectable.connect() as connection:
-        context.configure(connection=connection, target_metadata=target_metadata)
+        context.configure(
+            connection=connection, target_metadata=target_metadata
+        )
 
         with context.begin_transaction():
             context.run_migrations()
 
-# ✅ เลือกโหมด run
+
 if context.is_offline_mode():
     run_migrations_offline()
 else:
