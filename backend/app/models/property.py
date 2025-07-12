@@ -81,8 +81,13 @@ class Property(Base):
     
     # Relationships
     village = relationship("Village", back_populates="properties")
-    # resident residents = relationship("Resident", back_populates="property", cascade="all, delete-orphan")
-    #invoices invoices = relationship("Invoice", back_populates="property")
+    
+    # Accounting relationships
+    invoices = relationship("Invoice", back_populates="property_obj")
+    payments = relationship("Payment", back_populates="property_obj")
+    
+    # Commented out relationships to models that don't exist yet
+    # residents = relationship("Resident", back_populates="property", cascade="all, delete-orphan")
     # access_logs = relationship("AccessLog", back_populates="property")
     # visitor_passes = relationship("VisitorPass", back_populates="property")
     
@@ -102,15 +107,19 @@ class Property(Base):
     @property
     def current_residents(self):
         """Get current active residents"""
-        return [r for r in self.residents if r.is_active and not r.move_out_date]
+        # TODO: Implement when Resident model is created
+        return []
     
     @property
     def primary_resident(self):
         """Get primary resident (owner or main tenant)"""
-        primary = [r for r in self.current_residents if r.is_primary]
-        return primary[0] if primary else None
+        # TODO: Implement when Resident model is created
+        return None
     
     @property
     def effective_monthly_fee(self):
         """Get effective monthly fee (property-specific or village default)"""
-        return self.monthly_fee or self.village.default_monthly_fee
+        if self.monthly_fee:
+            return self.monthly_fee
+        # TODO: Implement when village.default_monthly_fee is available
+        return self.monthly_fee or 0
