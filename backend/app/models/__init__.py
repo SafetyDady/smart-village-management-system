@@ -12,6 +12,17 @@ from .payment import Payment, PaymentMethod
 from .receipt import Receipt
 from .payment_invoice import PaymentInvoice
 
+# Village Accounting ERP System models
+from .accounting import (
+    ChartOfAccounts, AccountType, BalanceType,
+    AccountingPeriod, PeriodType,
+    JournalEntry, JournalEntryLine, JournalEntryStatus,
+    GeneralLedger,
+    PaymentJournalEntry,
+    ExpenseCategory, SpendingRecord, SpendingJournalEntry,
+    BankReconciliationGL
+)
+
 __all__ = [
     "User",
     "Village", 
@@ -23,4 +34,19 @@ __all__ = [
     "PaymentMethod",
     "Receipt",
     "PaymentInvoice",
+    # Village Accounting ERP System
+    "ChartOfAccounts",
+    "AccountType",
+    "BalanceType",
+    "AccountingPeriod",
+    "PeriodType",
+    "JournalEntry",
+    "JournalEntryLine",
+    "JournalEntryStatus",
+    "GeneralLedger",
+    "PaymentJournalEntry",
+    "ExpenseCategory",
+    "SpendingRecord",
+    "SpendingJournalEntry",
+    "BankReconciliationGL",
 ]
