@@ -123,6 +123,7 @@ async def seed_initial_data(db: Session = Depends(get_db)):
         sample_villages = [
             {
                 "name": "Green Valley Village",
+                "code": "GVV001",
                 "description": "A peaceful village surrounded by green hills",
                 "address": "123 Green Valley Road, Chiang Mai",
                 "city": "Chiang Mai",
@@ -132,7 +133,8 @@ async def seed_initial_data(db: Session = Depends(get_db)):
                 "is_active": True
             },
             {
-                "name": "Sunset Beach Village", 
+                "name": "Sunset Beach Village",
+                "code": "SBV002", 
                 "description": "Beautiful beachfront community",
                 "address": "456 Beach Road, Phuket",
                 "city": "Phuket",
@@ -143,6 +145,7 @@ async def seed_initial_data(db: Session = Depends(get_db)):
             },
             {
                 "name": "Mountain View Village",
+                "code": "MVV003",
                 "description": "Village with stunning mountain views", 
                 "address": "789 Mountain Road, Chiang Rai",
                 "city": "Chiang Rai",
