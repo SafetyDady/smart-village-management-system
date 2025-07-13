@@ -3,7 +3,7 @@ Main API Router - Smart Village Management System
 """
 
 from fastapi import APIRouter
-from app.api.v1.endpoints import auth, users, villages, properties, admin
+from app.api.v1.endpoints import auth, users, villages, properties, admin, invoices, payments, receipts
 
 # Create main API router
 api_router = APIRouter()
@@ -36,5 +36,24 @@ api_router.include_router(
 api_router.include_router(
     admin.router,
     tags=["Admin"]
+)
+
+# Accounting endpoints
+api_router.include_router(
+    invoices.router,
+    prefix="/invoices",
+    tags=["Invoices"]
+)
+
+api_router.include_router(
+    payments.router,
+    prefix="/payments",
+    tags=["Payments"]
+)
+
+api_router.include_router(
+    receipts.router,
+    prefix="/receipts",
+    tags=["Receipts"]
 )
 
