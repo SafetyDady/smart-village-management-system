@@ -26,7 +26,7 @@ async def get_dashboard_summary(
         
         # Total Revenue (sum of all paid invoices)
         total_revenue_result = db.query(func.sum(Invoice.amount)).filter(
-            Invoice.status == InvoiceStatus.PAID
+            Invoice.status == "PAID"
         ).scalar()
         total_revenue = float(total_revenue_result) if total_revenue_result else 0.0
         
@@ -36,7 +36,7 @@ async def get_dashboard_summary(
         
         # Pending Invoices
         pending_invoices = db.query(Invoice).filter(
-            Invoice.status == InvoiceStatus.PENDING
+            Invoice.status == "PENDING"
         ).count()
         
         # Calculate growth percentages (mock for now, can be enhanced later)
