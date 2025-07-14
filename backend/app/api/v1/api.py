@@ -2,7 +2,7 @@
 Main API Router - Smart Village Management System
 """
 from fastapi import APIRouter
-from app.api.v1.endpoints import auth, users, villages, properties, admin, invoices, payments, receipts, dashboard, accounting, config
+from app.api.v1.endpoints import auth, users, villages, properties, admin, invoices, payments, receipts, dashboard, accounting, config, debug
 
 api_router = APIRouter()
 
@@ -44,5 +44,11 @@ api_router.include_router(config.router, prefix="/config", tags=["Configuration"
 api_router.include_router(
     dashboard.router,
     tags=["Dashboard"]
+)
+
+# Debug endpoints (temporary)
+api_router.include_router(
+    debug.router,
+    tags=["Debug"]
 )
 
