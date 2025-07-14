@@ -5,7 +5,7 @@ from app.core.database import get_db
 from app.core.security import get_current_user
 from app.models.user import User
 from app.models.village import Village
-from app.models.invoice import Invoice
+from app.models.invoice import Invoice, InvoiceStatus
 from app.models.payment import Payment
 from typing import Dict, Any
 
@@ -26,7 +26,7 @@ async def get_dashboard_summary(
         
         # Total Revenue (sum of all paid invoices)
         total_revenue_result = db.query(func.sum(Invoice.amount)).filter(
-            Invoice.status == "paid"
+            Invoice.status == InvoiceStatus.PAID
         ).scalar()
         total_revenue = float(total_revenue_result) if total_revenue_result else 0.0
         
@@ -36,7 +36,7 @@ async def get_dashboard_summary(
         
         # Pending Invoices
         pending_invoices = db.query(Invoice).filter(
-            Invoice.status == "pending"
+            Invoice.status == InvoiceStatus.PENDING
         ).count()
         
         # Calculate growth percentages (mock for now, can be enhanced later)
