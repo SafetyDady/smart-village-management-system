@@ -50,6 +50,35 @@ async def add_process_time_header(request: Request, call_next):
     response.headers["X-Process-Time"] = str(process_time)
     return response
 
+@app.on_event("startup")
+async def startup_event():
+    """Startup event handler"""
+    logger.info("🚀 Starting Smart Village Management System...")
+    
+    # Run database migrations
+    try:
+        from app.core.migration import run_migrations, check_enum_compatibility
+        
+        logger.info("🔄 Running database migrations...")
+        migration_success = run_migrations()
+        
+        if migration_success:
+            logger.info("✅ Database migrations completed")
+            
+            # Check enum compatibility
+            enum_check = check_enum_compatibility()
+            if enum_check:
+                logger.info("✅ Enum compatibility verified")
+            else:
+                logger.warning("⚠️ Enum compatibility issues detected")
+        else:
+            logger.error("❌ Database migration failed")
+            
+    except Exception as e:
+        logger.error(f"❌ Startup migration error: {e}")
+    
+    logger.info("✅ Application startup completed")
+
 # Include API router
 app.include_router(api_router, prefix=settings.API_V1_STR)
 
