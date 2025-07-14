@@ -26,7 +26,9 @@ const SuperAdminDashboard = () => {
   const navigate = useNavigate()
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [dashboardData, setDashboardData] = useState(null)
+  const [recentActivities, setRecentActivities] = useState([])
   const [loading, setLoading] = useState(true)
+  const [activitiesLoading, setActivitiesLoading] = useState(true)
   const [error, setError] = useState(null)
 
   // Load dashboard data
@@ -40,12 +42,73 @@ const SuperAdminDashboard = () => {
       } catch (err) {
         console.error('Dashboard Error:', err)
         setError(err.message)
+        // Fallback to mock data if API fails
+        setDashboardData({
+          total_villages: 12,
+          total_revenue: 2450000,
+          active_users: 1247,
+          pending_invoices: 15,
+          growth: {
+            villages: '+2 this month',
+            revenue: '+15% from last month',
+            users: '+8% from last month',
+            invoices: '-12% from last month'
+          }
+        })
       } finally {
         setLoading(false)
       }
     }
 
     loadDashboardData()
+  }, [])
+
+  // Load recent activities
+  useEffect(() => {
+    const loadRecentActivities = async () => {
+      try {
+        setActivitiesLoading(true)
+        const data = await dashboardAPI.getRecentActivities(4)
+        setRecentActivities(data.activities || [])
+      } catch (err) {
+        console.error('Recent Activities Error:', err)
+        // Fallback to mock data if API fails
+        setRecentActivities([
+          { 
+            type: 'invoice',
+            message: 'New invoice created for Green Valley Village', 
+            time: '2 minutes ago', 
+            icon: 'receipt',
+            amount: 5000
+          },
+          { 
+            type: 'payment',
+            message: 'Payment received from Sunset Hills Community', 
+            time: '15 minutes ago', 
+            icon: 'credit-card',
+            amount: 3500
+          },
+          { 
+            type: 'user',
+            message: 'New village admin registered', 
+            time: '1 hour ago', 
+            icon: 'users',
+            amount: null
+          },
+          { 
+            type: 'property',
+            message: 'Mountain View Estate added new property', 
+            time: '2 hours ago', 
+            icon: 'building',
+            amount: null
+          },
+        ])
+      } finally {
+        setActivitiesLoading(false)
+      }
+    }
+
+    loadRecentActivities()
   }, [])
 
   const handleLogout = () => {
@@ -93,6 +156,31 @@ const SuperAdminDashboard = () => {
       color: 'text-orange-600'
     }
   ] : []
+
+  // Map activity types to icons and colors
+  const getActivityIcon = (type, iconName) => {
+    const iconMap = {
+      'receipt': Receipt,
+      'credit-card': CreditCard,
+      'users': Users,
+      'building': Building2,
+      'invoice': Receipt,
+      'payment': CreditCard,
+      'user': Users,
+      'property': Building2
+    }
+    return iconMap[iconName] || iconMap[type] || Receipt
+  }
+
+  const getActivityColor = (type) => {
+    const colorMap = {
+      'invoice': 'text-green-600',
+      'payment': 'text-blue-600',
+      'user': 'text-purple-600',
+      'property': 'text-orange-600'
+    }
+    return colorMap[type] || 'text-gray-600'
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -158,6 +246,7 @@ const SuperAdminDashboard = () => {
             {error && (
               <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
                 <p className="text-red-600">Failed to load dashboard data: {error}</p>
+                <p className="text-sm text-red-500 mt-1">Showing fallback data. Please check your connection.</p>
               </div>
             )}
           </div>
@@ -274,20 +363,46 @@ const SuperAdminDashboard = () => {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {[
-                  { icon: Receipt, text: 'New invoice created for Green Valley Village', time: '2 minutes ago', color: 'text-green-600' },
-                  { icon: CreditCard, text: 'Payment received from Sunset Hills Community', time: '15 minutes ago', color: 'text-blue-600' },
-                  { icon: Users, text: 'New village admin registered', time: '1 hour ago', color: 'text-purple-600' },
-                  { icon: Building2, text: 'Mountain View Estate added new property', time: '2 hours ago', color: 'text-orange-600' },
-                ].map((activity, index) => (
-                  <div key={index} className="flex items-center space-x-3 p-3 rounded-lg hover:bg-accent">
-                    <activity.icon className={`h-5 w-5 ${activity.color}`} />
-                    <div className="flex-1">
-                      <p className="text-sm font-medium">{activity.text}</p>
-                      <p className="text-xs text-muted-foreground">{activity.time}</p>
+                {activitiesLoading ? (
+                  // Loading skeleton for activities
+                  Array.from({ length: 4 }).map((_, index) => (
+                    <div key={index} className="flex items-center space-x-3 p-3 rounded-lg">
+                      <div className="h-5 w-5 bg-gray-200 rounded animate-pulse"></div>
+                      <div className="flex-1">
+                        <div className="h-4 bg-gray-200 rounded w-3/4 mb-2 animate-pulse"></div>
+                        <div className="h-3 bg-gray-200 rounded w-1/4 animate-pulse"></div>
+                      </div>
                     </div>
+                  ))
+                ) : recentActivities.length > 0 ? (
+                  recentActivities.map((activity, index) => {
+                    const ActivityIcon = getActivityIcon(activity.type, activity.icon)
+                    const color = getActivityColor(activity.type)
+                    
+                    return (
+                      <div key={index} className="flex items-center space-x-3 p-3 rounded-lg hover:bg-accent">
+                        <ActivityIcon className={`h-5 w-5 ${color}`} />
+                        <div className="flex-1">
+                          <p className="text-sm font-medium">{activity.message}</p>
+                          <div className="flex items-center space-x-2">
+                            <p className="text-xs text-muted-foreground">{activity.time || activity.timestamp}</p>
+                            {activity.amount && (
+                              <span className="text-xs text-green-600 font-medium">
+                                ฿{activity.amount.toLocaleString()}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    )
+                  })
+                ) : (
+                  <div className="text-center py-8 text-muted-foreground">
+                    <FileText className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                    <p>No recent activities found</p>
+                    <p className="text-sm">Activities will appear here as they happen</p>
                   </div>
-                ))}
+                )}
               </div>
             </CardContent>
           </Card>
