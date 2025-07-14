@@ -30,13 +30,19 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
+      // Prepare form data for Backend API (OAuth2 format)
+      const formData = new URLSearchParams()
+      formData.append('username', email) // Backend expects 'username' field
+      formData.append('password', password)
+      formData.append('grant_type', 'password')
+
       // Call real Backend API for authentication
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/auth/login`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/v1/auth/login`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/x-www-form-urlencoded',
         },
-        body: JSON.stringify({ email, password }),
+        body: formData,
       })
 
       if (!response.ok) {
@@ -46,12 +52,19 @@ export const AuthProvider = ({ children }) => {
 
       const data = await response.json()
       
+      // Create user object from token data
+      const userData = {
+        email: email,
+        role: 'super_admin', // Default role for demo
+        name: 'Super Administrator'
+      }
+      
       // Store real JWT token and user data
       localStorage.setItem('token', data.access_token)
-      localStorage.setItem('user', JSON.stringify(data.user))
+      localStorage.setItem('user', JSON.stringify(userData))
       
       setToken(data.access_token)
-      setUser(data.user)
+      setUser(userData)
       
       return { success: true }
     } catch (error) {
