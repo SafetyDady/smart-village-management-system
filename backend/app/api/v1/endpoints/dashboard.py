@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from sqlalchemy import func
+from sqlalchemy import func, text
 from app.core.database import get_db
 from app.core.security import get_current_user
 from app.models.user import User
@@ -24,19 +24,17 @@ async def get_dashboard_summary(
         # Total Villages
         total_villages = db.query(Village).count()
         
-        # Total Revenue (sum of all paid invoices)
-        total_revenue_result = db.query(func.sum(Invoice.amount)).filter(
-            Invoice.status == InvoiceStatus.PAID
-        ).scalar()
-        total_revenue = float(total_revenue_result) if total_revenue_result else 0.0
+        # Total Revenue (sum of paid invoices) - Use raw SQL to avoid enum issues
+        paid_revenue_result = db.execute(text("SELECT COALESCE(SUM(amount), 0) FROM invoices WHERE status IN ('PAID', 'paid')")).fetchone()
+        total_revenue = float(paid_revenue_result[0]) if paid_revenue_result else 0.0
         
-        # Active Users (users who logged in within last 30 days)
-        # For now, we'll count all users as active
-        active_users = db.query(User).count()
+        # Pending Revenue (sum of pending invoices) - Use raw SQL to avoid enum issues  
+        pending_revenue_result = db.execute(text("SELECT COALESCE(SUM(amount), 0) FROM invoices WHERE status IN ('PENDING', 'pending')")).fetchone()
+        pending_revenue = float(pending_revenue_result[0]) if pending_revenue_result else 0.0
         
-        # Pending Invoices
+        # Total Pending Invoices
         pending_invoices = db.query(Invoice).filter(
-            Invoice.status == InvoiceStatus.PENDING
+            Invoice.status.in_(['PENDING', 'pending'])
         ).count()
         
         # Calculate growth percentages (mock for now, can be enhanced later)
