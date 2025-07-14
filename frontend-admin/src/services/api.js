@@ -288,10 +288,24 @@ export class MockDataService {
   }
 }
 
+// Dashboard API
+export class DashboardAPI extends ApiService {
+  // Get dashboard summary
+  async getSummary() {
+    return this.get('/dashboard-summary')
+  }
+
+  // Get recent activities
+  async getRecentActivities(limit = 10) {
+    return this.get('/recent-activities', { limit })
+  }
+}
+
 // Create API instances
 export const invoiceAPI = new InvoiceAPI()
 export const paymentAPI = new PaymentAPI()
 export const receiptAPI = new ReceiptAPI()
+export const dashboardAPI = new DashboardAPI()
 
 // Export default API service
 export default ApiService
