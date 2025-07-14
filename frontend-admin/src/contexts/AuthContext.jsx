@@ -30,9 +30,8 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      // For demo purposes, we'll simulate login
-      // In production, this would call the actual API
-      const response = await fetch('/api/v1/auth/login', {
+      // Call real Backend API for authentication
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -41,12 +40,13 @@ export const AuthProvider = ({ children }) => {
       })
 
       if (!response.ok) {
-        throw new Error('Login failed')
+        const errorData = await response.json().catch(() => ({}))
+        throw new Error(errorData.detail || 'Login failed')
       }
 
       const data = await response.json()
       
-      // Store auth data
+      // Store real JWT token and user data
       localStorage.setItem('token', data.access_token)
       localStorage.setItem('user', JSON.stringify(data.user))
       
@@ -60,43 +60,31 @@ export const AuthProvider = ({ children }) => {
     }
   }
 
-  const loginDemo = (role) => {
-    // Demo login for development
-    const demoUsers = {
+  const loginDemo = async (role) => {
+    // Use real authentication with predefined demo credentials
+    const demoCredentials = {
       super_admin: {
-        id: 1,
         email: 'admin@smartvillage.com',
-        role: 'super_admin',
-        first_name: 'Super',
-        last_name: 'Admin',
-        village_id: null
+        password: 'admin123'
       },
       village_admin: {
-        id: 2,
-        email: 'village@smartvillage.com',
-        role: 'village_admin',
-        first_name: 'Village',
-        last_name: 'Admin',
-        village_id: 1
+        email: 'village@smartvillage.com', 
+        password: 'village123'
       },
       village_accounting: {
-        id: 3,
         email: 'accounting@smartvillage.com',
-        role: 'village_accounting',
-        first_name: 'Accounting',
-        last_name: 'Admin',
-        village_id: 1
+        password: 'accounting123'
       }
     }
 
-    const demoUser = demoUsers[role]
-    const demoToken = `demo_token_${role}_${Date.now()}`
+    const credentials = demoCredentials[role]
+    if (!credentials) {
+      console.error('Invalid demo role:', role)
+      return { success: false, error: 'Invalid role' }
+    }
 
-    localStorage.setItem('token', demoToken)
-    localStorage.setItem('user', JSON.stringify(demoUser))
-    
-    setToken(demoToken)
-    setUser(demoUser)
+    // Call real login function with demo credentials
+    return await login(credentials.email, credentials.password)
   }
 
   const logout = () => {

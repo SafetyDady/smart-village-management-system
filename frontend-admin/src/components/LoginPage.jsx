@@ -10,6 +10,7 @@ import { Building2, Shield, Calculator } from 'lucide-react'
 const LoginPage = () => {
   const { isAuthenticated, loginDemo } = useAuth()
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
 
   if (isAuthenticated()) {
     return <Navigate to="/dashboard" replace />
@@ -17,10 +18,15 @@ const LoginPage = () => {
 
   const handleDemoLogin = async (role) => {
     setLoading(true)
+    setError(null)
     try {
-      await loginDemo(role)
+      const result = await loginDemo(role)
+      if (!result.success) {
+        setError(result.error || 'Login failed')
+      }
     } catch (error) {
       console.error('Login failed:', error)
+      setError(error.message || 'Login failed')
     } finally {
       setLoading(false)
     }
