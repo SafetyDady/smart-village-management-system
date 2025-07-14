@@ -13,10 +13,10 @@ from app.core.database import Base
 
 class InvoiceStatus(PyEnum):
     """Invoice status enumeration"""
-    PENDING = "pending"
-    PAID = "paid"
-    OVERDUE = "overdue"
-    CANCELED = "canceled"
+    PENDING = "PENDING"
+    PAID = "PAID"
+    OVERDUE = "OVERDUE"
+    CANCELED = "CANCELED"
 
 
 class InvoiceType(PyEnum):
