@@ -12,7 +12,7 @@ import {
   TableRow,
 } from '../ui/table'
 import { Plus, CreditCard, Banknote, Smartphone, QrCode } from 'lucide-react'
-import { MockDataService } from '../../services/api'
+import { paymentAPI } from '../../services/api'
 
 const PaymentManagement = () => {
   const { user } = useAuth()
@@ -26,10 +26,11 @@ const PaymentManagement = () => {
   const loadPayments = async () => {
     try {
       setLoading(true)
-      const mockData = MockDataService.generateMockPayments(30)
-      setPayments(mockData)
+      const response = await paymentAPI.getAll()
+      setPayments(response.payments || [])
     } catch (error) {
       console.error('Failed to load payments:', error)
+      setPayments([]) // Fallback to empty array on error
     } finally {
       setLoading(false)
     }

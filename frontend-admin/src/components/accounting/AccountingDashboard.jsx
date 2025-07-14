@@ -15,7 +15,7 @@ import {
   XCircle
 } from 'lucide-react'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts'
-import { MockDataService } from '../../services/api'
+import { invoiceAPI, paymentAPI, receiptAPI } from '../../services/api'
 
 const AccountingDashboard = () => {
   const { user, hasRole } = useAuth()
@@ -40,54 +40,69 @@ const AccountingDashboard = () => {
     try {
       setLoading(true)
       
-      // For demo purposes, use mock data
-      const mockInvoices = MockDataService.generateMockInvoices(50)
-      const mockPayments = MockDataService.generateMockPayments(35)
-      const mockReceipts = MockDataService.generateMockReceipts(35)
+      // Fetch real data from APIs
+      const [invoicesData, paymentsData, receiptsData] = await Promise.all([
+        invoiceAPI.getInvoices().catch(() => []),
+        paymentAPI.getPayments().catch(() => []),
+        receiptAPI.getReceipts().catch(() => [])
+      ])
 
-      // Calculate stats
-      const totalAmount = mockInvoices.reduce((sum, inv) => sum + parseFloat(inv.amount), 0)
-      const paidAmount = mockInvoices
+      // Calculate stats from real data
+      const totalAmount = invoicesData.reduce((sum, inv) => sum + parseFloat(inv.amount || 0), 0)
+      const paidAmount = invoicesData
         .filter(inv => inv.status === 'paid')
-        .reduce((sum, inv) => sum + parseFloat(inv.amount), 0)
-      const pendingAmount = mockInvoices
+        .reduce((sum, inv) => sum + parseFloat(inv.amount || 0), 0)
+      const pendingAmount = invoicesData
         .filter(inv => inv.status === 'pending')
-        .reduce((sum, inv) => sum + parseFloat(inv.amount), 0)
-      const overdueAmount = mockInvoices
+        .reduce((sum, inv) => sum + parseFloat(inv.amount || 0), 0)
+      const overdueAmount = invoicesData
         .filter(inv => inv.status === 'overdue')
-        .reduce((sum, inv) => sum + parseFloat(inv.amount), 0)
+        .reduce((sum, inv) => sum + parseFloat(inv.amount || 0), 0)
 
       setStats({
-        totalInvoices: mockInvoices.length,
+        totalInvoices: invoicesData.length,
         totalAmount,
         paidAmount,
         pendingAmount,
         overdueAmount,
-        totalPayments: mockPayments.length,
-        totalReceipts: mockReceipts.length
+        totalPayments: paymentsData.length,
+        totalReceipts: receiptsData.length
       })
 
-      // Prepare chart data (monthly revenue)
+      // Prepare chart data (monthly revenue from real data)
       const monthlyData = []
       for (let i = 5; i >= 0; i--) {
         const date = new Date()
         date.setMonth(date.getMonth() - i)
         const monthName = date.toLocaleDateString('en-US', { month: 'short' })
         
+        // Filter invoices for this month
+        const monthStart = new Date(date.getFullYear(), date.getMonth(), 1)
+        const monthEnd = new Date(date.getFullYear(), date.getMonth() + 1, 0)
+        
+        const monthlyInvoices = invoicesData.filter(inv => {
+          const invDate = new Date(inv.created_at || inv.issued_at)
+          return invDate >= monthStart && invDate <= monthEnd
+        })
+        
+        const monthlyRevenue = monthlyInvoices
+          .filter(inv => inv.status === 'paid')
+          .reduce((sum, inv) => sum + parseFloat(inv.amount || 0), 0)
+        
         monthlyData.push({
           month: monthName,
-          revenue: Math.floor(Math.random() * 200000) + 100000,
-          invoices: Math.floor(Math.random() * 50) + 20
+          revenue: monthlyRevenue,
+          invoices: monthlyInvoices.length
         })
       }
       setChartData(monthlyData)
 
-      // Prepare status data for pie chart
+      // Prepare status data for pie chart from real data
       const statusCounts = {
-        paid: mockInvoices.filter(inv => inv.status === 'paid').length,
-        pending: mockInvoices.filter(inv => inv.status === 'pending').length,
-        overdue: mockInvoices.filter(inv => inv.status === 'overdue').length,
-        canceled: mockInvoices.filter(inv => inv.status === 'canceled').length
+        paid: invoicesData.filter(inv => inv.status === 'paid').length,
+        pending: invoicesData.filter(inv => inv.status === 'pending').length,
+        overdue: invoicesData.filter(inv => inv.status === 'overdue').length,
+        canceled: invoicesData.filter(inv => inv.status === 'canceled').length
       }
 
       setStatusData([
@@ -99,6 +114,18 @@ const AccountingDashboard = () => {
 
     } catch (error) {
       console.error('Failed to load dashboard data:', error)
+      // Set empty data on error
+      setStats({
+        totalInvoices: 0,
+        totalAmount: 0,
+        paidAmount: 0,
+        pendingAmount: 0,
+        overdueAmount: 0,
+        totalPayments: 0,
+        totalReceipts: 0
+      })
+      setChartData([])
+      setStatusData([])
     } finally {
       setLoading(false)
     }

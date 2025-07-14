@@ -36,7 +36,7 @@ import {
   AlertTriangle,
   XCircle
 } from 'lucide-react'
-import { MockDataService } from '../../services/api'
+import { invoiceAPI } from '../../services/api'
 
 const InvoiceManagement = () => {
   const { user, hasRole } = useAuth()
@@ -61,11 +61,12 @@ const InvoiceManagement = () => {
   const loadInvoices = async () => {
     try {
       setLoading(true)
-      // For demo purposes, use mock data
-      const mockData = MockDataService.generateMockInvoices(50)
-      setInvoices(mockData)
+      // Fetch real data from API
+      const data = await invoiceAPI.getInvoices()
+      setInvoices(data || [])
     } catch (error) {
       console.error('Failed to load invoices:', error)
+      setInvoices([])
     } finally {
       setLoading(false)
     }

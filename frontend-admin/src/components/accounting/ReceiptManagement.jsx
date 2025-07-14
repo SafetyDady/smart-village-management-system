@@ -11,7 +11,7 @@ import {
   TableRow,
 } from '../ui/table'
 import { Plus, Download, Eye, Receipt } from 'lucide-react'
-import { MockDataService } from '../../services/api'
+import { receiptAPI } from '../../services/api'
 
 const ReceiptManagement = () => {
   const { user } = useAuth()
@@ -25,10 +25,11 @@ const ReceiptManagement = () => {
   const loadReceipts = async () => {
     try {
       setLoading(true)
-      const mockData = MockDataService.generateMockReceipts(25)
-      setReceipts(mockData)
+      const response = await receiptAPI.getAll()
+      setReceipts(response.receipts || [])
     } catch (error) {
       console.error('Failed to load receipts:', error)
+      setReceipts([]) // Fallback to empty array on error
     } finally {
       setLoading(false)
     }

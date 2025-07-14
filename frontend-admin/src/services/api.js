@@ -84,37 +84,37 @@ class ApiService {
 export class InvoiceAPI extends ApiService {
   // Get all invoices
   async getInvoices(params = {}) {
-    return this.get('/accounting/invoices/', params)
+    return this.get('/invoices', params)
   }
 
   // Get single invoice
   async getInvoice(id) {
-    return this.get(`/accounting/invoices/${id}`)
+    return this.get(`/invoices/${id}`)
   }
 
   // Create invoice
   async createInvoice(data) {
-    return this.post('/accounting/invoices/', data)
+    return this.post('/invoices', data)
   }
 
   // Update invoice
   async updateInvoice(id, data) {
-    return this.put(`/accounting/invoices/${id}`, data)
+    return this.put(`/invoices/${id}`, data)
   }
 
   // Delete invoice
   async deleteInvoice(id) {
-    return this.delete(`/accounting/invoices/${id}`)
+    return this.delete(`/invoices/${id}`)
   }
 
   // Update invoice status
   async updateInvoiceStatus(id, status) {
-    return this.patch(`/accounting/invoices/${id}/status`, { status })
+    return this.patch(`/invoices/${id}/status`, { status })
   }
 
   // Get invoice summary
   async getInvoiceSummary(params = {}) {
-    return this.get('/accounting/invoices/summary', params)
+    return this.get('/invoices/summary', params)
   }
 }
 
@@ -122,37 +122,37 @@ export class InvoiceAPI extends ApiService {
 export class PaymentAPI extends ApiService {
   // Get all payments
   async getPayments(params = {}) {
-    return this.get('/accounting/payments/', params)
+    return this.get('/payments', params)
   }
 
   // Get single payment
   async getPayment(id) {
-    return this.get(`/accounting/payments/${id}`)
+    return this.get(`/payments/${id}`)
   }
 
   // Create payment
   async createPayment(data) {
-    return this.post('/accounting/payments/', data)
+    return this.post('/payments', data)
   }
 
   // Update payment
   async updatePayment(id, data) {
-    return this.put(`/accounting/payments/${id}`, data)
+    return this.put(`/payments/${id}`, data)
   }
 
   // Delete payment
   async deletePayment(id) {
-    return this.delete(`/accounting/payments/${id}`)
+    return this.delete(`/payments/${id}`)
   }
 
   // Get payment allocations
   async getPaymentAllocations(id) {
-    return this.get(`/accounting/payments/${id}/allocations`)
+    return this.get(`/payments/${id}/allocations`)
   }
 
   // Manual payment allocation
   async allocatePayment(id, allocations) {
-    return this.post(`/accounting/payments/${id}/allocate`, { allocations })
+    return this.post(`/payments/${id}/allocate`, { allocations })
   }
 }
 
@@ -160,38 +160,38 @@ export class PaymentAPI extends ApiService {
 export class ReceiptAPI extends ApiService {
   // Get all receipts
   async getReceipts(params = {}) {
-    return this.get('/accounting/receipts/', params)
+    return this.get('/receipts', params)
   }
 
   // Get single receipt
   async getReceipt(id) {
-    return this.get(`/accounting/receipts/${id}`)
+    return this.get(`/receipts/${id}`)
   }
 
   // Create receipt
   async createReceipt(data) {
-    return this.post('/accounting/receipts/', data)
+    return this.post('/receipts', data)
   }
 
   // Update receipt
   async updateReceipt(id, data) {
-    return this.put(`/accounting/receipts/${id}`, data)
+    return this.put(`/receipts/${id}`, data)
   }
 
   // Delete receipt
   async deleteReceipt(id) {
-    return this.delete(`/accounting/receipts/${id}`)
+    return this.delete(`/receipts/${id}`)
   }
 
   // Auto-generate receipt
   async autoGenerateReceipt(paymentId, note = '') {
     const params = note ? { note } : {}
-    return this.post(`/accounting/receipts/payment/${paymentId}/auto-generate`, {}, params)
+    return this.post(`/receipts/payment/${paymentId}/auto-generate`, {}, params)
   }
 
   // Get receipt by payment
   async getReceiptByPayment(paymentId) {
-    return this.get(`/accounting/receipts/payment/${paymentId}`)
+    return this.get(`/receipts/payment/${paymentId}`)
   }
 }
 
@@ -288,10 +288,24 @@ export class MockDataService {
   }
 }
 
+// Dashboard API
+export class DashboardAPI extends ApiService {
+  // Get dashboard summary
+  async getSummary() {
+    return this.get('/dashboard-summary')
+  }
+
+  // Get recent activities
+  async getRecentActivities(limit = 10) {
+    return this.get('/recent-activities', { limit })
+  }
+}
+
 // Create API instances
 export const invoiceAPI = new InvoiceAPI()
 export const paymentAPI = new PaymentAPI()
 export const receiptAPI = new ReceiptAPI()
+export const dashboardAPI = new DashboardAPI()
 
 // Export default API service
 export default ApiService
