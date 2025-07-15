@@ -148,6 +148,17 @@ async def test_endpoint():
     }
 
 
+@app.get("/env-debug")
+def env_debug():
+    """Environment debug endpoint to diagnose Railway configuration"""
+    import os
+    return {
+        "port": os.environ.get("PORT"),
+        "host": os.environ.get("HOST"),
+        "all_env": dict(os.environ)
+    }
+
+
 @app.get("/config")
 async def get_config():
     """Get application configuration (non-sensitive)"""
