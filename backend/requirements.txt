@@ -70,8 +70,8 @@ qrcode[pil]==7.4.2
 # Cryptography (additional)
 cryptography==41.0.7
 
-# LINE Bot SDK
-line-bot-sdk==3.5.0
+# LINE Bot SDK - Temporarily removed due to aiohttp Python 3.13 compatibility issues
+# line-bot-sdk==3.5.0
 
 # OCR and AI services
 opencv-python==4.8.1.78
