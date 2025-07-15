@@ -28,6 +28,20 @@ app = FastAPI(
     redoc_url="/redoc"
 )
 
+# Add startup event for debugging
+@app.on_event("startup")
+async def startup_event():
+    """Startup event handler with debug logging"""
+    logger.info("🚀 FastAPI application starting up...")
+    logger.info(f"Environment: {settings.ENVIRONMENT}")
+    logger.info(f"Debug mode: {settings.DEBUG}")
+    logger.info(f"Accounting enabled: {settings.ACCOUNTING_ENABLED}")
+    logger.info("✅ FastAPI startup completed successfully!")
+    print("🚀 STARTUP: FastAPI application started successfully!")
+    print(f"📊 STARTUP: Environment = {settings.ENVIRONMENT}")
+    print(f"🔧 STARTUP: Debug = {settings.DEBUG}")
+    print("✅ STARTUP: Ready to serve requests!")
+
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
