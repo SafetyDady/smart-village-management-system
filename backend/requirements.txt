@@ -12,8 +12,8 @@ python-jose[cryptography]==3.3.0
 passlib[bcrypt]==1.7.4
 
 # Configuration
-pydantic==2.5.0
-pydantic-settings==2.0.3
+pydantic>=2.10.0
+pydantic-settings>=2.10.0
 python-dotenv==1.0.0
 
 # HTTP Client
