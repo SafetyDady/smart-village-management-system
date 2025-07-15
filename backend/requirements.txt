@@ -29,7 +29,7 @@ emails==0.6.0
 
 # File handling
 python-magic==0.4.27
-Pillow==10.1.0
+Pillow>=10.2.0
 
 # Date and time
 python-dateutil==2.8.2
