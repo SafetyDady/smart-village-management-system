@@ -137,6 +137,17 @@ async def health_check():
     }
 
 
+@app.get("/test")
+async def test_endpoint():
+    """Simple test endpoint to verify service is working"""
+    return {
+        "message": "Service is working!",
+        "timestamp": time.time(),
+        "status": "OK",
+        "version": "2.0.0"
+    }
+
+
 @app.get("/config")
 async def get_config():
     """Get application configuration (non-sensitive)"""
