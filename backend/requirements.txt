@@ -46,7 +46,6 @@ aiofiles==23.2.1
 # Testing
 pytest==7.4.3
 pytest-asyncio==0.21.1
-httpx==0.25.2
 
 # Development tools
 black==23.11.0
@@ -89,9 +88,6 @@ xlsxwriter==3.1.9
 reportlab==4.0.7
 weasyprint==60.2
 
-# Image processing
-Pillow==10.1.0
-
 # Timezone handling
 pytz==2023.3
 
@@ -113,11 +109,9 @@ prometheus-client==0.19.0
 # Health checks
 psutil==5.9.6
 
-python-dotenv>=1.1.0
 psycopg2-binary>=2.9.0
 pytest>=8.4.0
 pytest-asyncio>=1.0.0
-httpx>=0.28.0
 python-jose[cryptography]>=3.5.0
 passlib[bcrypt]>=1.7.4
 email-validator>=2.2.0
